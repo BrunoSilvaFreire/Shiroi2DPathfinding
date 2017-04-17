@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Shiroi.Unity.Pathfinding2D.Util;
 using UnityEditor;
 using UnityEngine;
@@ -7,6 +8,7 @@ using Vexe.Runtime.Types;
 namespace Shiroi.Unity.Pathfinding2D {
     public class TileMap : BaseBehaviour {
         public const byte DefaultColorAlpha = 0x9B; //155
+        public const float DefaultNodeBoxCastSize = 0.9F;
 
         public TileMap() {
             nodeMap = new SerializableDictionary<MapPosition, Node>();
@@ -15,53 +17,101 @@ namespace Shiroi.Unity.Pathfinding2D {
         public Color MaxColor = GetColor("E91E63");
         public Color MinColor = GetColor("00BCD4");
         public Color BorderLineColor = Color.green;
+        public Color PlatformNodeColor = GetColor("3F51B5");
+        public Color EdgeNodeColor = GetColor("9C27B0");
+        public Color SoloNodeColor = GetColor("FF9800");
+
         private MapPosition mapMinPos = new MapPosition(0, 0);
-        private MapPosition mapMaxPos = new MapPosition(1, 0);
+        private MapPosition mapMaxPos = new MapPosition(20, 10);
+        public LayerMask WorldMask;
         public Vector2 NodeSize = Vector2.one;
+        public Vector2 NodeBoxCastSize = new Vector2(DefaultNodeBoxCastSize, DefaultNodeBoxCastSize);
 
         [SerializeField, Hide]
         private readonly SerializableDictionary<MapPosition, Node> nodeMap;
 
+        private readonly List<MapPosition> emptyNodes = new List<MapPosition>();
 
         private static Color GetColor(string color) {
             return ColorUtil.FromHex(color, DefaultColorAlpha);
         }
 
-        [Show]
         public Vector2 Center {
             get {
                 return new Vector2(XCenter, YCenter);
             }
         }
 
-        [Show]
         public Vector2 Size {
             get {
                 return new Vector2(XSize, YSize);
             }
         }
 
+        public Vector2 SizeRaw {
+            get {
+                return new Vector2(XSizeRaw, YSizeRaw);
+            }
+        }
+
+        public float NodeSizeX {
+            get {
+                return NodeSize.x;
+            }
+        }
+
+        public float NodeSizeY {
+            get {
+                return NodeSize.y;
+            }
+        }
+
         public float XCenter {
             get {
-                return (float) (mapMaxPos.X + mapMinPos.X) / 2;
+                return (mapMaxPos.X * NodeSizeX + mapMinPos.X * NodeSizeX) / 2;
             }
         }
 
 
         public float YCenter {
             get {
+                return (mapMaxPos.Y * NodeSizeY + mapMinPos.Y * NodeSizeY) / 2;
+            }
+        }
+
+        public float XCenterRaw {
+            get {
+                return (float) (mapMaxPos.X + mapMinPos.X) / 2;
+            }
+        }
+
+
+        public float YCenterRaw {
+            get {
                 return (float) (mapMaxPos.Y + mapMinPos.Y) / 2;
             }
         }
 
-        public int XSize {
+        public float XSize {
+            get {
+                return XSizeRaw * NodeSizeX;
+            }
+        }
+
+        public float YSize {
+            get {
+                return YSizeRaw * NodeSizeY;
+            }
+        }
+
+        public int XSizeRaw {
             get {
                 AdjustXy();
                 return MapMaxPos.X - MapMinPos.X;
             }
         }
 
-        public int YSize {
+        public int YSizeRaw {
             get {
                 AdjustXy();
                 return MapMaxPos.Y - MapMinPos.Y;
@@ -103,6 +153,51 @@ namespace Shiroi.Unity.Pathfinding2D {
             mapMaxPos.Y = maxY;
         }
 
+        [Show]
+        public void Regenerate() {
+            Clear();
+            Generate();
+        }
+
+        [Show]
+        public void Clear() {
+            nodeMap.Clear();
+            emptyNodes.Clear();
+        }
+
+        [Show]
+        public void Generate() {
+            for (var x = MinX; x < MaxX; x++) {
+                for (var y = MinY; y < MaxY; y++) {
+                    GetNode(x, y);
+                }
+            }
+        }
+
+        public int MinX {
+            get {
+                return mapMinPos.X;
+            }
+        }
+
+        public int MinY {
+            get {
+                return mapMinPos.Y;
+            }
+        }
+
+        public int MaxX {
+            get {
+                return mapMaxPos.X;
+            }
+        }
+
+        public int MaxY {
+            get {
+                return mapMaxPos.Y;
+            }
+        }
+
         public bool IsOutOfBounds(MapPosition position) {
             AdjustXy();
             return position.IsWithin(mapMaxPos, mapMinPos);
@@ -112,18 +207,67 @@ namespace Shiroi.Unity.Pathfinding2D {
             return GetNode(new MapPosition(x, y));
         }
 
-        private Node GetNode(MapPosition mapPosition) {
-            if (nodeMap.ContainsKey(mapPosition)) {
-                return nodeMap[mapPosition];
+        private Node GetNode(MapPosition position) {
+            if (emptyNodes.Contains(position)) {
+                return null;
             }
-            var node = GenerateNode(mapPosition);
-            nodeMap[mapPosition] = node;
+            if (nodeMap.ContainsKey(position)) {
+                return nodeMap[position];
+            }
+            var node = GenerateNode(position);
+            if (node == null) {
+                emptyNodes.Add(position);
+                return null;
+            }
+            nodeMap[position] = node;
             return node;
         }
 
         private Node GenerateNode(MapPosition mapPosition) {
-            //TODO implement
-            return null;
+            var type = CheckNodeType(mapPosition);
+            if (type == Node.NodeType.Empty) {
+                return null;
+            }
+            return new Node(mapPosition, type);
+        }
+
+        private Node.NodeType CheckNodeType(MapPosition mapPosition) {
+            if (BoxCast(mapPosition)) {
+                //Inside an object
+                return Node.NodeType.Blocked;
+            }
+            var x = mapPosition.X;
+            var y = mapPosition.Y;
+            if (!BoxCast(x, y - 1)) {
+                return Node.NodeType.Empty;
+            }
+            //Is on solid ground, check for edges
+            var leftLowBoxCast = BoxCast(x - 1, y - 1);
+            var rightLowBoxCast = BoxCast(x + 1, y - 1);
+            var leftBoxCast = BoxCast(x - 1, y);
+            var rightBoxCast = BoxCast(x + 1, y);
+            if (leftLowBoxCast && rightLowBoxCast && !leftBoxCast && !rightBoxCast) {
+                return Node.NodeType.Platform;
+            }
+            if (leftLowBoxCast || leftBoxCast) {
+                return Node.NodeType.RightEdge;
+            }
+            if (rightLowBoxCast || rightBoxCast) {
+                return Node.NodeType.LeftEdge;
+            }
+            return Node.NodeType.Solo;
+        }
+
+        private RaycastHit2D BoxCast(MapPosition mapPosition) {
+            return BoxCast(mapPosition.X, mapPosition.Y);
+        }
+
+        private RaycastHit2D BoxCast(int x, int y) {
+            return BoxCast(new Vector2(x, y));
+        }
+
+        private RaycastHit2D BoxCast(Vector2 pos) {
+            return Physics2D.BoxCast(pos, NodeBoxCastSize, 0f, Vector2.zero, 1F, WorldMask);
         }
 
         private void OnDrawGizmosSelected() {
@@ -133,6 +277,26 @@ namespace Shiroi.Unity.Pathfinding2D {
             Gizmos.DrawCube(mapMaxPos.ToWorldPosition(NodeSize), NodeSize);
             Gizmos.color = BorderLineColor;
             Gizmos.DrawWireCube(Center, Size);
+            foreach (var node in nodeMap.Values) {
+                if (!node.Walkable) {
+                    continue;
+                }
+                Gizmos.color = GetColor(node);
+                Gizmos.DrawCube((Vector2) node.Position, NodeSize);
+            }
+        }
+
+        private Color GetColor(Node node) {
+            switch (node.Type) {
+                case Node.NodeType.LeftEdge:
+                case Node.NodeType.RightEdge:
+                    return EdgeNodeColor;
+                case Node.NodeType.Solo:
+                    return SoloNodeColor;
+                case Node.NodeType.Platform:
+                    return PlatformNodeColor;
+            }
+            throw new ArgumentOutOfRangeException(node.Type.ToString());
         }
     }
 }
