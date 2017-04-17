@@ -1,4 +1,5 @@
-﻿using Shiroi.Unity.Pathfinding2D.Util;
+﻿using System;
+using Shiroi.Unity.Pathfinding2D.Util;
 using UnityEditor;
 using UnityEngine;
 using Vexe.Runtime.Types;
@@ -7,11 +8,19 @@ namespace Shiroi.Unity.Pathfinding2D {
     public class TileMap : BaseBehaviour {
         public const byte DefaultColorAlpha = 0x9B; //155
 
+        public TileMap() {
+            nodeMap = new SerializableDictionary<MapPosition, Node>();
+        }
+
         public Color MaxColor = GetColor("E91E63");
         public Color MinColor = GetColor("00BCD4");
         public Color BorderLineColor = Color.green;
         private MapPosition mapMinPos = new MapPosition(0, 0);
         private MapPosition mapMaxPos = new MapPosition(1, 0);
+        public Vector2 NodeSize = Vector2.one;
+
+        [SerializeField, Hide]
+        private readonly SerializableDictionary<MapPosition, Node> nodeMap;
 
 
         private static Color GetColor(string color) {
@@ -82,9 +91,6 @@ namespace Shiroi.Unity.Pathfinding2D {
             }
         }
 
-        public Vector2 NodeSize = Vector2.one;
-
-        private Node[,] nodeMap;
 
         public void AdjustXy() {
             var minX = Mathf.Min(MapMaxPos.X, MapMinPos.X);
@@ -102,16 +108,21 @@ namespace Shiroi.Unity.Pathfinding2D {
             return position.IsWithin(mapMaxPos, mapMinPos);
         }
 
-        [Show]
-        public void RecreateNodeMap() {
-            nodeMap = new Node[XSize, YSize];
+        public Node GetNode(int x, int y) {
+            return GetNode(new MapPosition(x, y));
         }
 
-        public Node GetNode(int x, int y) {
-            if (nodeMap == null) {
-                Debug.LogError("The node map isn't initialized!");
-                return null;
+        private Node GetNode(MapPosition mapPosition) {
+            if (nodeMap.ContainsKey(mapPosition)) {
+                return nodeMap[mapPosition];
             }
+            var node = GenerateNode(mapPosition);
+            nodeMap[mapPosition] = node;
+            return node;
+        }
+
+        private Node GenerateNode(MapPosition mapPosition) {
+            //TODO implement
             return null;
         }
 
