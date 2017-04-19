@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using Shiroi.Unity.Pathfinding2D.Link;
 using Shiroi.Unity.Pathfinding2D.Util;
-using UnityEditor;
 using UnityEngine;
 using Vexe.Runtime.Types;
 
 namespace Shiroi.Unity.Pathfinding2D {
+    /// <summary>
+    /// A Tile Map is responsible for detecting and generating <see cref="Node"/>s in a scene using the
+    /// provided <see cref="LayerMask"/> on various <see cref="Physics2D"/> BoxCasts.
+    /// </summary>
+    /// This class does not handle links, if you wish to see the class for generating links, check
+    /// <see cref="LinkMap"/>
+    /// <seealso cref="LinkMap"/>
     public class TileMap : BaseBehaviour {
         public const byte DefaultColorAlpha = 0x9B; //155
         public const float DefaultNodeBoxCastSize = 0.9F;
@@ -29,8 +36,6 @@ namespace Shiroi.Unity.Pathfinding2D {
 
         [SerializeField, Hide]
         private readonly SerializableDictionary<MapPosition, Node> nodeMap;
-
-        private readonly List<MapPosition> emptyNodes = new List<MapPosition>();
 
         private static Color GetColor(string color) {
             return ColorUtil.FromHex(color, DefaultColorAlpha);
@@ -140,7 +145,6 @@ namespace Shiroi.Unity.Pathfinding2D {
         [Show]
         public void Clear() {
             nodeMap.Clear();
-            emptyNodes.Clear();
         }
 
         [Show]
@@ -178,15 +182,12 @@ namespace Shiroi.Unity.Pathfinding2D {
         }
 
         private Node GetNode(MapPosition position) {
-            if (emptyNodes.Contains(position)) {
-                return null;
-            }
             if (nodeMap.ContainsKey(position)) {
                 return nodeMap[position];
             }
             var node = GenerateNode(position);
             if (node == null) {
-                emptyNodes.Add(position);
+                nodeMap[position] = null;
                 return null;
             }
             nodeMap[position] = node;
@@ -248,7 +249,7 @@ namespace Shiroi.Unity.Pathfinding2D {
             Gizmos.color = BorderLineColor;
             Gizmos.DrawWireCube(Center, Size);
             foreach (var node in nodeMap.Values) {
-                if (!node.Walkable) {
+                if (node == null || !node.Walkable) {
                     continue;
                 }
                 Gizmos.color = GetColor(node);
