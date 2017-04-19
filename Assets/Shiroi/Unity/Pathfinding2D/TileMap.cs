@@ -118,6 +118,13 @@ namespace Shiroi.Unity.Pathfinding2D {
             }
         }
 
+        public float DirectionVectorConversionLimitX {
+            get { return NodeSizeX * 0.8f; }
+        }
+        public float DirectionVectorConversionLimitY {
+            get { return NodeSizeX * 0.8f; }
+        }
+
         [Show]
         public MapPosition MapMinPos {
             get {

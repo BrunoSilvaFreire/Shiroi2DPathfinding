@@ -1,18 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Vexe.Runtime.Extensions;
 
 namespace Shiroi.Unity.Pathfinding2D.Util {
     public static class GravityUtil {
         public const float DefaultGravityForce = 9.8f;
 
-        public static List<Vector2> CalculatePath(
-            Vector2 pos,
-            Vector2 initialSpeed,
-            float timeIncrementation,
-            TileMap tileMap,
-            IGroundEntity entity,
-            out Node finalNode,
-            float gravityForce = DefaultGravityForce) {
+        public static List<Vector2> CalculatePath(Vector2 pos, Vector2 initialSpeed, float timeIncrementation,
+            TileMap tileMap, IGroundEntity entity, out Node finalNode, float gravityForce = DefaultGravityForce) {
             var minY = tileMap.MinY;
             finalNode = null;
             var rb = entity.RigidBody;
@@ -25,7 +21,19 @@ namespace Shiroi.Unity.Pathfinding2D.Util {
                     break;
                 }
                 var x = pos.x + initialSpeed.x * time;
-                list.Add(new Vector2(x, y));
+                var newPos = new Vector2(x, y);
+                if (!list.IsEmpty()) {
+                    var last = list.Last();
+                    var dir = last - newPos;
+                    var raycast = Physics2D.Raycast(last, dir, dir.magnitude, tileMap.WorldMask);
+                    if (raycast) {
+                        var hitPoint = raycast.point;
+                        list.Add(hitPoint);
+                        break;
+                    }
+                }
+                list.Add(newPos);
+
                 time += timeIncrementation;
             }
             return list;
