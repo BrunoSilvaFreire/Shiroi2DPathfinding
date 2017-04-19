@@ -29,6 +29,14 @@ namespace Shiroi.Unity.Pathfinding2D.Util {
                     if (raycast) {
                         var hitPoint = raycast.point;
                         list.Add(hitPoint);
+                        var hitObjPos = (Vector2) raycast.transform.position;
+                        var hitDirVec = hitObjPos - hitPoint;
+                        var direc = Direction.FromVector(hitDirVec, tileMap.DirectionVectorConversionLimitX,
+                            tileMap.DirectionVectorConversionLimitY);
+                        finalNode = tileMap.GetNode(tileMap.GetNode(hitObjPos), direc);
+                        if (finalNode != null) {
+                            list.Add(finalNode.Position);
+                        }
                         break;
                     }
                 }
@@ -45,6 +53,16 @@ namespace Shiroi.Unity.Pathfinding2D.Util {
                 var previous = path[i - 1];
                 Gizmos.DrawLine(previous, point);
             }
+        }
+
+        public static float CalculateDistance(List<Vector2> path) {
+            float distance = 0;
+            for (var i = 1; i < path.Count - 1; i++) {
+                var point = path[i];
+                var previous = path[i - 1];
+                distance += Vector2.Distance(point, previous);
+            }
+            return distance;
         }
     }
 }

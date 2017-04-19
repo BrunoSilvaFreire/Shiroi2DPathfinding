@@ -5,7 +5,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+      <RootNamespace>
+      </RootNamespace>
     <ProjectGuid>{51620EE3-3DEA-7333-6E7A-6011D65ABAFB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -54,6 +55,7 @@
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Link\GravityLink.cs"/>
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Link\ILink.cs"/>
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Link\LinearLink.cs"/>
+      <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Link\LinkMap.cs"/>
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\MapPosition.cs"/>
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Node.cs"/>
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Platform.cs"/>
@@ -202,5 +204,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-
 </Project>

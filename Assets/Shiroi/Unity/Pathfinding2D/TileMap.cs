@@ -37,71 +37,47 @@ namespace Shiroi.Unity.Pathfinding2D {
         }
 
         public Vector2 Center {
-            get {
-                return new Vector2(XCenter, YCenter);
-            }
+            get { return new Vector2(XCenter, YCenter); }
         }
 
         public Vector2 Size {
-            get {
-                return new Vector2(XSize, YSize);
-            }
+            get { return new Vector2(XSize, YSize); }
         }
 
         public Vector2 SizeRaw {
-            get {
-                return new Vector2(XSizeRaw, YSizeRaw);
-            }
+            get { return new Vector2(XSizeRaw, YSizeRaw); }
         }
 
         public float NodeSizeX {
-            get {
-                return NodeSize.x;
-            }
+            get { return NodeSize.x; }
         }
 
         public float NodeSizeY {
-            get {
-                return NodeSize.y;
-            }
+            get { return NodeSize.y; }
         }
 
         public float XCenter {
-            get {
-                return (mapMaxPos.X * NodeSizeX + mapMinPos.X * NodeSizeX) / 2;
-            }
+            get { return (mapMaxPos.X * NodeSizeX + mapMinPos.X * NodeSizeX) / 2; }
         }
 
-
         public float YCenter {
-            get {
-                return (mapMaxPos.Y * NodeSizeY + mapMinPos.Y * NodeSizeY) / 2;
-            }
+            get { return (mapMaxPos.Y * NodeSizeY + mapMinPos.Y * NodeSizeY) / 2; }
         }
 
         public float XCenterRaw {
-            get {
-                return (float) (mapMaxPos.X + mapMinPos.X) / 2;
-            }
+            get { return (float) (mapMaxPos.X + mapMinPos.X) / 2; }
         }
 
-
         public float YCenterRaw {
-            get {
-                return (float) (mapMaxPos.Y + mapMinPos.Y) / 2;
-            }
+            get { return (float) (mapMaxPos.Y + mapMinPos.Y) / 2; }
         }
 
         public float XSize {
-            get {
-                return XSizeRaw * NodeSizeX;
-            }
+            get { return XSizeRaw * NodeSizeX; }
         }
 
         public float YSize {
-            get {
-                return YSizeRaw * NodeSizeY;
-            }
+            get { return YSizeRaw * NodeSizeY; }
         }
 
         public int XSizeRaw {
@@ -121,33 +97,28 @@ namespace Shiroi.Unity.Pathfinding2D {
         public float DirectionVectorConversionLimitX {
             get { return NodeSizeX * 0.8f; }
         }
+
         public float DirectionVectorConversionLimitY {
             get { return NodeSizeX * 0.8f; }
         }
 
         [Show]
         public MapPosition MapMinPos {
-            get {
-                return mapMinPos;
-            }
+            get { return mapMinPos; }
             set {
                 mapMinPos = value;
                 AdjustXy();
             }
         }
 
-
         [Show]
         public MapPosition MapMaxPos {
-            get {
-                return mapMaxPos;
-            }
+            get { return mapMaxPos; }
             set {
                 mapMaxPos = value;
                 AdjustXy();
             }
         }
-
 
         public void AdjustXy() {
             var minX = Mathf.Min(MapMaxPos.X, MapMinPos.X);
@@ -174,35 +145,27 @@ namespace Shiroi.Unity.Pathfinding2D {
 
         [Show]
         public void Generate() {
-            for (var x = MinX; x < MaxX; x++) {
-                for (var y = MinY; y < MaxY; y++) {
-                    GetNode(x, y);
+            for (var x = MinX * NodeSizeX; x < MaxX * NodeSizeX; x += NodeSizeX) {
+                for (var y = MinY * NodeSizeY; y < MaxY * NodeSizeY; y += NodeSizeY) {
+                    GetNode(new Vector2(x / NodeSizeX, y / NodeSizeY));
                 }
             }
         }
 
         public int MinX {
-            get {
-                return mapMinPos.X;
-            }
+            get { return mapMinPos.X; }
         }
 
         public int MinY {
-            get {
-                return mapMinPos.Y;
-            }
+            get { return mapMinPos.Y; }
         }
 
         public int MaxX {
-            get {
-                return mapMaxPos.X;
-            }
+            get { return mapMaxPos.X; }
         }
 
         public int MaxY {
-            get {
-                return mapMaxPos.Y;
-            }
+            get { return mapMaxPos.Y; }
         }
 
         public bool IsOutOfBounds(MapPosition position) {
@@ -279,9 +242,9 @@ namespace Shiroi.Unity.Pathfinding2D {
 
         private void OnDrawGizmosSelected() {
             Gizmos.color = MinColor;
-            Gizmos.DrawCube(mapMinPos.ToWorldPosition(NodeSize), NodeSize);
+            Gizmos.DrawCube((Vector2) mapMinPos, NodeSize);
             Gizmos.color = MaxColor;
-            Gizmos.DrawCube(mapMaxPos.ToWorldPosition(NodeSize), NodeSize);
+            Gizmos.DrawCube((Vector2) mapMaxPos, NodeSize);
             Gizmos.color = BorderLineColor;
             Gizmos.DrawWireCube(Center, Size);
             foreach (var node in nodeMap.Values) {
@@ -289,7 +252,8 @@ namespace Shiroi.Unity.Pathfinding2D {
                     continue;
                 }
                 Gizmos.color = GetColor(node);
-                Gizmos.DrawCube((Vector2) node.Position, NodeSize);
+                var pos = node.Position;
+                Gizmos.DrawCube(new Vector2(pos.X * NodeSizeX, pos.Y * NodeSizeY), NodeSize);
             }
         }
 
@@ -304,6 +268,14 @@ namespace Shiroi.Unity.Pathfinding2D {
                     return PlatformNodeColor;
             }
             throw new ArgumentOutOfRangeException(node.Type.ToString());
+        }
+
+        public Node GetNode(Vector2 position) {
+            return GetNode((int) (position.x * NodeSizeX), (int) (position.y * NodeSizeY));
+        }
+
+        public Node GetNode(Node node, Direction direction) {
+            return GetNode(node.X + direction.X, node.Y + direction.Y);
         }
     }
 }

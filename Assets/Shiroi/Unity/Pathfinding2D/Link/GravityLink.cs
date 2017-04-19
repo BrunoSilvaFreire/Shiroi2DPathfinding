@@ -1,9 +1,22 @@
-﻿namespace Shiroi.Unity.Pathfinding2D.Link {
-    public class GravityLink : ILink{
-        public GravityLink(Node @from, Node to, LinkType type) {
+﻿using System.Collections.Generic;
+using Shiroi.Unity.Pathfinding2D.Util;
+using UnityEngine;
+
+namespace Shiroi.Unity.Pathfinding2D.Link {
+    public class GravityLink : ILink {
+        public GravityLink(Node from, Vector2 speed, float timeIncrementation, TileMap tileMap, IGroundEntity entity,
+            LinkType type) {
             From = @from;
-            To = to;
             Type = type;
+            Node end;
+            this.Path = GravityUtil.CalculatePath(from.Position, speed, timeIncrementation, tileMap, entity, out end);
+            To = end;
+            this.Distance = GravityUtil.CalculateDistance(Path);
+        }
+
+        public List<Vector2> Path {
+            get;
+            private set;
         }
 
         public Node From {
@@ -27,7 +40,7 @@
         }
 
         public void DrawGizmos() {
-
+            GravityUtil.DrawGizmos(Path);
         }
     }
 }
