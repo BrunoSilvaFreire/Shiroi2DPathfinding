@@ -62,6 +62,7 @@
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Util\ColorUtil.cs"/>
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Util\GravityPreviewer.cs"/>
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Util\GravityUtil.cs"/>
+      <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Util\TestEntity.cs"/>
       <Compile Include="Assets\Vexe\Runtime\FastSave\Core\FSCommon.cs"/>
       <Compile Include="Assets\Vexe\Runtime\FastSave\Core\Load.cs"/>
       <Compile Include="Assets\Vexe\Runtime\FastSave\Core\Save.cs"/>
@@ -166,11 +167,6 @@
       <None Include="Assets\Vexe\HISTORY.txt"/>
       <None Include="Assets\Vexe\LICENSE.txt"/>
       <None Include="Assets\Vexe\Runtime\FastSave\README.txt"/>
-      <Reference Include="UnityEngine.Advertisements">
-          <HintPath>C:/Program
-              Files/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/UnityEngine.Advertisements.dll
-          </HintPath>
-      </Reference>
       <Reference Include="UnityEngine.UI">
           <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
       </Reference>
@@ -190,11 +186,6 @@
       <Reference Include="UnityEngine.HoloLens">
           <HintPath>C:/Program
               Files/Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll
-          </HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.Purchasing">
-          <HintPath>C:/Program
-              Files/Unity/Editor/Data/UnityExtensions/Unity/UnityPurchasing/UnityEngine.Purchasing.dll
           </HintPath>
       </Reference>
       <Reference Include="UnityEngine.VR">
