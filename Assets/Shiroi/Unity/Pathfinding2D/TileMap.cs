@@ -177,6 +177,10 @@ namespace Shiroi.Unity.Pathfinding2D {
             return position.IsWithin(mapMaxPos, mapMinPos);
         }
 
+        public bool IsOutOfBounds(Vector2 position) {
+            return IsOutOfBounds((MapPosition) position);
+        }
+
         public Node GetNode(int x, int y) {
             return GetNode(new MapPosition(x, y));
         }

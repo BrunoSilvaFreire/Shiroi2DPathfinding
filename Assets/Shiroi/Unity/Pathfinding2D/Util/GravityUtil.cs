@@ -17,11 +17,12 @@ namespace Shiroi.Unity.Pathfinding2D.Util {
             var time = 0F;
             while (finalNode == null) {
                 var y = pos.y + initialSpeed.y * time + gravity * Mathf.Pow(time, 2) / 2;
-                if (y < minY) {
-                    break;
-                }
+
                 var x = pos.x + initialSpeed.x * time;
                 var newPos = new Vector2(x, y);
+                if (tileMap.IsOutOfBounds(newPos)) {
+                    break;
+                }
                 if (!list.IsEmpty()) {
                     var last = list.Last();
                     var dir = last - newPos;
