@@ -45,7 +45,7 @@ namespace Shiroi.Unity.Pathfinding2D {
 
         [Show]
         public int TotalNodes {
-            get { return nodeMap.Values.Sum(node => node == null || !node.Walkable ? 0 : 1); }
+            get { return WalkableNodes.Count; }
         }
 
         public Vector2 Center {
@@ -289,8 +289,12 @@ namespace Shiroi.Unity.Pathfinding2D {
             return x >= MaxX || x <= MinX || y <= MinY || y >= MaxY;
         }
 
+        public List<Node> WalkableNodes {
+            get { return nodeMap.Values.Where((node, i) => node != null && node.Walkable).ToList(); }
+        }
+
         public IEnumerator<Node> GetEnumerator() {
-            return nodeMap.Values.GetEnumerator();
+            return WalkableNodes.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator() {

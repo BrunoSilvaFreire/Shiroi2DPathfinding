@@ -25,12 +25,12 @@ namespace Shiroi.Unity.Pathfinding2D.Link {
             var links = new List<ILink>();
 
             var leftNode = TileMap.GetNode(node, Direction.Left);
-            if (leftNode != null) {
+            if (leftNode != null && leftNode.Walkable) {
                 links.Add(new LinearLink(node, leftNode));
             }
 
             var rightNode = TileMap.GetNode(node, Direction.Right);
-            if (rightNode != null) {
+            if (rightNode != null && rightNode.Walkable) {
                 links.Add(new LinearLink(node, rightNode));
             }
 

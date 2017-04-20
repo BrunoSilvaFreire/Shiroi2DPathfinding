@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Shiroi.Unity.Pathfinding2D.Util;
 using UnityEngine;
@@ -42,17 +43,18 @@ namespace Shiroi.Unity.Pathfinding2D.Link {
         public Color RunLinkColor = ColorUtil.FromHex("FFC107");
         private List<ILinkGenerator> generators = new List<ILinkGenerator>();
 
+        [SerializeField, Hide]
         private readonly SerializableDictionary<Node, LinkPoint> linkPoints =
             new SerializableDictionary<Node, LinkPoint>();
 
         public List<ILinkGenerator> Generators {
-            get { return generators; }
-            set {
+            get {
                 if (generators.IsEmpty()) {
                     generators.AddRange(CreateDefaultGenerators());
                 }
-                generators = value;
+                return generators;
             }
+            set { generators = value; }
         }
 
         private IEnumerable<ILinkGenerator> CreateDefaultGenerators() {
@@ -68,6 +70,7 @@ namespace Shiroi.Unity.Pathfinding2D.Link {
 
         [Show]
         public void Clear() {
+            linkPoints.Clear();
         }
 
         [Show]
@@ -86,12 +89,20 @@ namespace Shiroi.Unity.Pathfinding2D.Link {
         }
 
         private void OnDrawGizmosSelected() {
-            Gizmos.color = Color.green;
             foreach (var point in linkPoints.Values) {
                 foreach (var link in point.Links) {
+                    Gizmos.color = GetColor(link.Type);
                     link.DrawGizmos();
                 }
             }
+        }
+
+        private Color GetColor(LinkType linkType) {
+            switch (linkType) {
+                case LinkType.Run:
+                    return RunLinkColor;
+            }
+            throw new ArgumentOutOfRangeException(linkType.ToString());
         }
     }
 }

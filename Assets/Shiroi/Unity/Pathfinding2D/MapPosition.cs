@@ -31,6 +31,10 @@ namespace Shiroi.Unity.Pathfinding2D {
             return new Vector2(pos.X, pos.Y);
         }
 
+        public static implicit operator Vector3(MapPosition pos) {
+            return new Vector2(pos.X, pos.Y);
+        }
+
         public static implicit operator MapPosition(Vector2 pos) {
             return new MapPosition((int) pos.x, (int) pos.y);
         }
@@ -70,7 +74,5 @@ namespace Shiroi.Unity.Pathfinding2D {
         public bool IsWithin(Vector2 max, Vector2 min) {
             return X >= max.x && X <= min.x && Y >= min.y && Y <= max.y;
         }
-
-
     }
 }

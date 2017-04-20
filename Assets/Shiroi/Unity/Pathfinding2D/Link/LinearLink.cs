@@ -29,6 +29,8 @@ namespace Shiroi.Unity.Pathfinding2D.Link {
             }
         }
 
-        public void DrawGizmos() { }
+        public void DrawGizmos() {
+            Gizmos.DrawLine(From.Position, To.Position);
+        }
     }
 }
