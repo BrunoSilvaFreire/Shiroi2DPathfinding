@@ -172,14 +172,6 @@ namespace Shiroi.Unity.Pathfinding2D {
             get { return mapMaxPos.Y; }
         }
 
-        public bool IsOutOfBounds(MapPosition position) {
-            AdjustXy();
-            return position.IsWithin(mapMaxPos, mapMinPos);
-        }
-
-        public bool IsOutOfBounds(Vector2 position) {
-            return IsOutOfBounds((MapPosition) position);
-        }
 
         public Node GetNode(int x, int y) {
             return GetNode(new MapPosition(x, y));
@@ -281,6 +273,18 @@ namespace Shiroi.Unity.Pathfinding2D {
 
         public Node GetNode(Node node, Direction direction) {
             return GetNode(node.X + direction.X, node.Y + direction.Y);
+        }
+
+        public bool IsOutOfBounds(MapPosition position) {
+            return !position.IsWithin(mapMaxPos, mapMinPos);
+        }
+
+        public bool IsOutOfBounds(Vector2 position) {
+            return !position.IsWithin(mapMaxPos, mapMinPos);
+        }
+
+        public bool IsOutOfBounds(float x, float y) {
+            return x >= MaxX || x <= MinX || y <= MinY || y >= MaxY;
         }
     }
 }

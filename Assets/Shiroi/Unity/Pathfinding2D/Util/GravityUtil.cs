@@ -9,7 +9,6 @@ namespace Shiroi.Unity.Pathfinding2D.Util {
 
         public static List<Vector2> CalculatePath(Vector2 pos, Vector2 initialSpeed, float timeIncrementation,
             TileMap tileMap, IGroundEntity entity, out Node finalNode, float gravityForce = DefaultGravityForce) {
-            var minY = tileMap.MinY;
             finalNode = null;
             var rb = entity.RigidBody;
             var gravity = rb.mass * -gravityForce * rb.gravityScale;
@@ -17,12 +16,11 @@ namespace Shiroi.Unity.Pathfinding2D.Util {
             var time = 0F;
             while (finalNode == null) {
                 var y = pos.y + initialSpeed.y * time + gravity * Mathf.Pow(time, 2) / 2;
-
                 var x = pos.x + initialSpeed.x * time;
-                var newPos = new Vector2(x, y);
-                if (tileMap.IsOutOfBounds(newPos)) {
+                if (tileMap.IsOutOfBounds(x, y)) {
                     break;
                 }
+                var newPos = new Vector2(x, y);
                 if (!list.IsEmpty()) {
                     var last = list.Last();
                     var dir = last - newPos;
@@ -42,7 +40,6 @@ namespace Shiroi.Unity.Pathfinding2D.Util {
                     }
                 }
                 list.Add(newPos);
-
                 time += timeIncrementation;
             }
             return list;

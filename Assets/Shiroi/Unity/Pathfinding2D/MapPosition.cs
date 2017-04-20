@@ -70,5 +70,7 @@ namespace Shiroi.Unity.Pathfinding2D {
         public bool IsWithin(Vector2 max, Vector2 min) {
             return X >= max.x && X <= min.x && Y >= min.y && Y <= max.y;
         }
+
+
     }
 }
