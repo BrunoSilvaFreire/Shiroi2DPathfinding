@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Shiroi.Unity.Pathfinding2D.Link;
 using Shiroi.Unity.Pathfinding2D.Util;
 using UnityEngine;
@@ -13,7 +15,7 @@ namespace Shiroi.Unity.Pathfinding2D {
     /// This class does not handle links, if you wish to see the class for generating links, check
     /// <see cref="LinkMap"/>
     /// <seealso cref="LinkMap"/>
-    public class TileMap : BaseBehaviour {
+    public class TileMap : BaseBehaviour, IEnumerable<Node> {
         public const byte DefaultColorAlpha = 0x9B; //155
         public const float DefaultNodeBoxCastSize = 0.9F;
 
@@ -39,6 +41,11 @@ namespace Shiroi.Unity.Pathfinding2D {
 
         private static Color GetColor(string color) {
             return ColorUtil.FromHex(color, DefaultColorAlpha);
+        }
+
+        [Show]
+        public int TotalNodes {
+            get { return nodeMap.Values.Sum(node => node == null || !node.Walkable ? 0 : 1); }
         }
 
         public Vector2 Center {
@@ -137,23 +144,19 @@ namespace Shiroi.Unity.Pathfinding2D {
         }
 
         [Show]
-        public void Regenerate() {
-            Clear();
-            Generate();
-        }
-
-        [Show]
         public void Clear() {
             nodeMap.Clear();
         }
 
         [Show]
-        public void Generate() {
+        public void GenerateNodes() {
+            Clear();
             for (var x = MinX * NodeSizeX; x < MaxX * NodeSizeX; x += NodeSizeX) {
                 for (var y = MinY * NodeSizeY; y < MaxY * NodeSizeY; y += NodeSizeY) {
                     GetNode(new Vector2(x / NodeSizeX, y / NodeSizeY));
                 }
             }
+            Debug.Log(string.Format("Calculated a total of {0} nodes.", TotalNodes));
         }
 
         public int MinX {
@@ -171,7 +174,6 @@ namespace Shiroi.Unity.Pathfinding2D {
         public int MaxY {
             get { return mapMaxPos.Y; }
         }
-
 
         public Node GetNode(int x, int y) {
             return GetNode(new MapPosition(x, y));
@@ -285,6 +287,14 @@ namespace Shiroi.Unity.Pathfinding2D {
 
         public bool IsOutOfBounds(float x, float y) {
             return x >= MaxX || x <= MinX || y <= MinY || y >= MaxY;
+        }
+
+        public IEnumerator<Node> GetEnumerator() {
+            return nodeMap.Values.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() {
+            return GetEnumerator();
         }
     }
 }

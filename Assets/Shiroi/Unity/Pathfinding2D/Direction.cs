@@ -3,6 +3,11 @@ using UnityEngine;
 
 namespace Shiroi.Unity.Pathfinding2D {
     public struct Direction {
+        public static readonly Direction Up = new Direction(DirectionValue.Zero, DirectionValue.Foward);
+        public static readonly Direction Down = new Direction(DirectionValue.Zero, DirectionValue.Backward);
+        public static readonly Direction Left = new Direction(DirectionValue.Backward, DirectionValue.Zero);
+        public static readonly Direction Right = new Direction(DirectionValue.Foward, DirectionValue.Zero);
+
         public struct DirectionValue {
             public static readonly DirectionValue Foward = new DirectionValue(1);
             public static readonly DirectionValue Zero = new DirectionValue(0);

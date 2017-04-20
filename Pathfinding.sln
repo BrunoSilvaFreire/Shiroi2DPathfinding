@@ -1,9 +1,9 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2008
-
-Project("{5CAAA555-A177-A9E5-380B-A0DE0BFCB098}") = "Pathfinding", "Assembly-CSharp.csproj", "{51620EE3-3DEA-7333-6E7A-6011D65ABAFB}"
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pathfinding", "Assembly-CSharp.csproj", "{51620EE3-3DEA-7333-6E7A-6011D65ABAFB}"
 EndProject
-Project("{5CAAA555-A177-A9E5-380B-A0DE0BFCB098}") = "Pathfinding", "Assembly-CSharp-Editor.csproj", "{81CACFD5-726E-4F00-E033-67BBE33081CD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pathfinding", "Assembly-CSharp-Editor.csproj", "{81CACFD5-726E-4F00-E033-67BBE33081CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
