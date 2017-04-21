@@ -1,28 +1,66 @@
 ﻿using System;
 using System.Collections.Generic;
 using Shiroi.Unity.Pathfinding2D.Exception;
+using Shiroi.Unity.Pathfinding2D.Util;
 using UnityEngine;
+using Vexe.Runtime.Types;
 
 namespace Shiroi.Unity.Pathfinding2D {
     public class Platform {
-        private List<Node> nodes = new List<Node>();
+        [Show]
+        private readonly List<Node> nodes = new List<Node>();
 
+        public Platform(Node position) {
+            LeftEdgeNode = position;
+            RightEdgeNode = position;
+            Color = ColorUtil.Random();
+        }
+
+        public void DrawGizmos() {
+            Gizmos.color = Color;
+
+            Gizmos.DrawWireCube(Center, Size);
+            if (XSize > 1) {
+                Gizmos.DrawCube(Center, Vector2.one);
+            }
+        }
+
+        public Vector2 Size {
+            get { return new Vector2(XSize, 1); }
+        }
+
+        public Vector2 Center {
+            get { return new Vector2(XCenter, Y); }
+        }
+
+        [Show]
+        public float XCenter {
+            get { return (float) (LeftX + RightX) / 2; }
+        }
+
+        [Show]
+        public Color Color {
+            get;
+            set;
+        }
+
+        [Show]
         public Node LeftEdgeNode {
             get;
             private set;
         }
 
+        [Show]
         public Node RightEdgeNode {
             get;
             private set;
         }
 
         private bool IsDefined {
-            get {
-                return LeftEdgeNode != null && RightEdgeNode != null;
-            }
+            get { return LeftEdgeNode != null && RightEdgeNode != null; }
         }
 
+        [Show]
         public int Y {
             get {
                 if (!IsDefined) {
@@ -37,6 +75,7 @@ namespace Shiroi.Unity.Pathfinding2D {
             }
         }
 
+        [Show]
         public int LeftX {
             get {
                 if (!IsDefined) {
@@ -46,12 +85,13 @@ namespace Shiroi.Unity.Pathfinding2D {
             }
         }
 
+        [Show]
         public int RightX {
             get {
                 if (!IsDefined) {
                     throw new PlatformNotDefinedException();
                 }
-                return LeftEdgeNode.Position.X;
+                return RightEdgeNode.Position.X;
             }
         }
 
@@ -60,7 +100,21 @@ namespace Shiroi.Unity.Pathfinding2D {
                 if (!IsDefined) {
                     throw new PlatformNotDefinedException();
                 }
-                return RightX - LeftX;
+                return RightX - LeftX + 1;
+                return RightX - LeftX + 1;
+            }
+        }
+
+        public List<Node> Nodes {
+            get { return nodes; }
+        }
+
+        public List<Node> AllNodes {
+            get {
+                var n = nodes;
+                n.Add(LeftEdgeNode);
+                n.Add(RightEdgeNode);
+                return n;
             }
         }
 
@@ -77,16 +131,34 @@ namespace Shiroi.Unity.Pathfinding2D {
                 RightEdgeNode = node;
             }
             if (node != RightEdgeNode && node != LeftEdgeNode) {
-                nodes.Add(node);
+                Nodes.Add(node);
             }
         }
 
-        private bool Contains(Node node) {
-            return node == LeftEdgeNode || node == RightEdgeNode || nodes.Contains(node);
+        public bool IsNextToAndAdd(Node node, int limit = 1) {
+            var isNextTo = IsNextTo(node, limit);
+            if (isNextTo && !Contains(node)) {
+                AddNode(node);
+            }
+            return isNextTo;
+        }
+
+        public bool IsNextTo(Node node, int limit = 1) {
+            return node.X >= LeftX - limit && node.X <= RightX + limit && node.Y == Y;
+        }
+
+        public bool Contains(Node node) {
+            return node == LeftEdgeNode || node == RightEdgeNode || Nodes.Contains(node);
         }
 
         public override string ToString() {
             return string.Format("Platform(Y={0}, LeftX={1}, RightX={2})", Y, LeftX, RightX);
+        }
+
+        public void Merge(Platform platform) {
+            foreach (var node in platform.AllNodes) {
+                AddNode(node);
+            }
         }
     }
 }

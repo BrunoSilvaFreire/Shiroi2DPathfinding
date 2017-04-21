@@ -9,6 +9,11 @@ namespace Shiroi.Unity.Pathfinding2D.Util {
             return new Color32(r, g, b, a);
         }
 
+        public static Color Random(byte a = 255) {
+            return new Color(1 - UnityEngine.Random.value, 1 - UnityEngine.Random.value, 1 - UnityEngine.Random.value,
+                a);
+        }
+
         public static Color Invert(this Color color, byte a = 255) {
             var r = 1 - color.r / 255;
             var g = 1 - color.g / 255;

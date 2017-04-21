@@ -43,6 +43,8 @@ namespace Shiroi.Unity.Pathfinding2D.Link {
         public Color RunLinkColor = ColorUtil.FromHex("FFC107");
         public Color JumpLinkColor = ColorUtil.FromHex("6D6A5E");
         public Color FallLinkColor = ColorUtil.FromHex("5E676D");
+
+        [SerializeField]
         private List<ILinkGenerator> generators = new List<ILinkGenerator>();
 
         [SerializeField, Hide]

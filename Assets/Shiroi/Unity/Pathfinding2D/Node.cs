@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using Vexe.Runtime.Types;
 
 namespace Shiroi.Unity.Pathfinding2D {
     public class Node {
@@ -7,15 +8,15 @@ namespace Shiroi.Unity.Pathfinding2D {
             Type = type;
         }
 
+        [Show]
         public NodeType Type {
             get;
-            private set;
+            [Hide] private set;
         }
 
+        [Show]
         public bool Walkable {
-            get {
-                return Type != NodeType.Blocked;
-            }
+            get { return Type != NodeType.Blocked; }
         }
 
         [NotNull]
@@ -31,15 +32,11 @@ namespace Shiroi.Unity.Pathfinding2D {
         }
 
         public int X {
-            get {
-                return Position.X;
-            }
+            get { return Position.X; }
         }
 
         public int Y {
-            get {
-                return Position.Y;
-            }
+            get { return Position.Y; }
         }
 
         public enum NodeType {

@@ -39,8 +39,31 @@ namespace Shiroi.Unity.Pathfinding2D {
         [SerializeField, Hide]
         private readonly SerializableDictionary<MapPosition, Node> nodeMap;
 
+        public List<Platform> Platforms = new List<Platform>();
+
         private static Color GetColor(string color) {
             return ColorUtil.FromHex(color, DefaultColorAlpha);
+        }
+
+        public Platform GetPlatform(Node position) {
+            var found = Platforms.GetAllOrPut(platform => PlatformCheck(platform, position),
+                () => new Platform(position));
+            Platform plat;
+            if (found.HasSingle()) {
+                plat = found.Single();
+            } else {
+                plat = found.First();
+                for (var i = 1; i < found.Count; i++) {
+                    var p = found[i];
+                    plat.Merge(p);
+                    Platforms.Remove(p);
+                }
+            }
+            return plat;
+        }
+
+        private static bool PlatformCheck(Platform platform, Node position) {
+            return platform.Contains(position) || platform.IsNextToAndAdd(position);
         }
 
         [Show]
@@ -146,6 +169,7 @@ namespace Shiroi.Unity.Pathfinding2D {
         [Show]
         public void Clear() {
             nodeMap.Clear();
+            Platforms.Clear();
         }
 
         [Show]
@@ -187,6 +211,9 @@ namespace Shiroi.Unity.Pathfinding2D {
             if (node == null) {
                 nodeMap[position] = null;
                 return null;
+            }
+            if (node.Walkable) {
+                node.Platform = GetPlatform(node);
             }
             nodeMap[position] = node;
             return node;
@@ -253,6 +280,9 @@ namespace Shiroi.Unity.Pathfinding2D {
                 Gizmos.color = GetColor(node);
                 var pos = node.Position;
                 Gizmos.DrawCube(new Vector2(pos.X * NodeSizeX, pos.Y * NodeSizeY), NodeSize);
+            }
+            foreach (var platform in Platforms) {
+                platform.DrawGizmos();
             }
         }
 

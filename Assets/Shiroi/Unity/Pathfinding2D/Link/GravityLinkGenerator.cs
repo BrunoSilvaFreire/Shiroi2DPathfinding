@@ -48,7 +48,7 @@ namespace Shiroi.Unity.Pathfinding2D.Link {
         private void CheckGeneratedLink(ICollection<ILink> list, ILink generatedLink) {
             var from = generatedLink.From;
             var to = generatedLink.To;
-            if (from == null || to == null || from.Platform == to.Platform) {
+            if (from == null || to == null || from.Platform == to.Platform || !from.Walkable || !to.Walkable) {
                 return;
             }
             list.Add(generatedLink);

@@ -63,6 +63,7 @@
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Node.cs"/>
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Platform.cs"/>
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\TileMap.cs"/>
+      <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Util\CollectionsUtil.cs"/>
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Util\ColorUtil.cs"/>
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Util\DictionaryUtil.cs"/>
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Util\GravityPreviewer.cs"/>
