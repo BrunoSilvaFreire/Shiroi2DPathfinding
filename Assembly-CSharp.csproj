@@ -51,11 +51,14 @@
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Direction.cs"/>
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Exception\PlatformNotDefinedException.cs"/>
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\IGroundEntity.cs"/>
+      <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Link\AbstractLinkGenerator.cs"/>
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Link\GravityLink.cs"/>
+      <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Link\GravityLinkGenerator.cs"/>
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Link\ILink.cs"/>
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Link\ILinkGenerator.cs"/>
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Link\LinearLink.cs"/>
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Link\LinkMap.cs"/>
+      <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Link\RunLinkGenerator.cs"/>
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\MapPosition.cs"/>
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Node.cs"/>
       <Compile Include="Assets\Shiroi\Unity\Pathfinding2D\Platform.cs"/>

@@ -10,7 +10,7 @@ namespace Shiroi.Unity.Pathfinding2D.Link {
     public class LinkPoint {
         public Node Node;
 
-        private SerializableDictionary<ILinkGenerator, List<ILink>> links =
+        private readonly SerializableDictionary<ILinkGenerator, List<ILink>> links =
             new SerializableDictionary<ILinkGenerator, List<ILink>>();
 
         public List<ILink> GetLinks(ILinkGenerator generator) {
@@ -41,6 +41,8 @@ namespace Shiroi.Unity.Pathfinding2D.Link {
         public IGroundEntity Entity;
         public TileMap TileMap;
         public Color RunLinkColor = ColorUtil.FromHex("FFC107");
+        public Color JumpLinkColor = ColorUtil.FromHex("6D6A5E");
+        public Color FallLinkColor = ColorUtil.FromHex("5E676D");
         private List<ILinkGenerator> generators = new List<ILinkGenerator>();
 
         [SerializeField, Hide]
@@ -58,8 +60,8 @@ namespace Shiroi.Unity.Pathfinding2D.Link {
         }
 
         private IEnumerable<ILinkGenerator> CreateDefaultGenerators() {
-            return new[] {
-                new RunLinkGenerator(this)
+            return new ILinkGenerator[] {
+                new RunLinkGenerator(this), new FallLinkGenerator(this), new JumpLinkGenerator(this)
             };
         }
 
@@ -101,8 +103,13 @@ namespace Shiroi.Unity.Pathfinding2D.Link {
             switch (linkType) {
                 case LinkType.Run:
                     return RunLinkColor;
+                case LinkType.Fall:
+                    return FallLinkColor;
+                case LinkType.Jump:
+                    return JumpLinkColor;
+                default:
+                    throw new ArgumentOutOfRangeException(linkType.ToString());
             }
-            throw new ArgumentOutOfRangeException(linkType.ToString());
         }
     }
 }

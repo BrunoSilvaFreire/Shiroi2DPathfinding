@@ -6,12 +6,12 @@ namespace Shiroi.Unity.Pathfinding2D.Link {
     public class GravityLink : ILink {
         public GravityLink(Node from, Vector2 speed, float timeIncrementation, TileMap tileMap, IGroundEntity entity,
             LinkType type) {
-            From = @from;
+            From = from;
             Type = type;
             Node end;
-            this.Path = GravityUtil.CalculatePath(from.Position, speed, timeIncrementation, tileMap, entity, out end);
+            Path = GravityUtil.CalculatePath(from.Position, speed, timeIncrementation, tileMap, entity, out end);
             To = end;
-            this.Distance = GravityUtil.CalculateDistance(Path);
+            Distance = GravityUtil.CalculateDistance(Path);
         }
 
         public List<Vector2> Path {
