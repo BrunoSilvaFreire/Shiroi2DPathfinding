@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using Vexe.Runtime.Types;
+using Vexe.Runtime.Types.Others;
 using UnityObject = UnityEngine.Object;
 
 #if UNITY_EDITOR

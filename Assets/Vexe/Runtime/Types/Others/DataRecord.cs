@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using Vexe.Runtime.Helpers;
+using Vexe.Runtime.Types.Others;
 
 namespace Vexe.Runtime.Types
 {

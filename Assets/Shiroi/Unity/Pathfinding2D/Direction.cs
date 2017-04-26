@@ -2,12 +2,14 @@
 using UnityEngine;
 
 namespace Shiroi.Unity.Pathfinding2D {
+    [Serializable]
     public struct Direction {
         public static readonly Direction Up = new Direction(DirectionValue.Zero, DirectionValue.Foward);
         public static readonly Direction Down = new Direction(DirectionValue.Zero, DirectionValue.Backward);
         public static readonly Direction Left = new Direction(DirectionValue.Backward, DirectionValue.Zero);
         public static readonly Direction Right = new Direction(DirectionValue.Foward, DirectionValue.Zero);
 
+        [Serializable]
         public struct DirectionValue {
             public static readonly DirectionValue Foward = new DirectionValue(1);
             public static readonly DirectionValue Zero = new DirectionValue(0);
@@ -40,8 +42,12 @@ namespace Shiroi.Unity.Pathfinding2D {
                 if (val > limit) {
                     return Foward;
                 }
-                return val < limit ? Backward : Zero;
+                return val < -limit ? Backward : Zero;
             }
+        }
+
+        public override string ToString() {
+            return string.Format("Direction(x={0}, y={1})", (int) X, (int) Y);
         }
 
         public DirectionValue X;
@@ -50,14 +56,13 @@ namespace Shiroi.Unity.Pathfinding2D {
         public static Direction FromVector(Vector2 vector2, float xLimit, float yLimit) {
             var x = vector2.x;
             var y = vector2.y;
-            return new Direction(DirectionValue.FromVector(x, xLimit),DirectionValue.FromVector(y, yLimit));
+            return new Direction(DirectionValue.FromVector(x, xLimit), DirectionValue.FromVector(y, yLimit));
         }
 
         public Direction(DirectionValue x, DirectionValue y) {
             X = x;
             Y = y;
         }
-
 
         public static implicit operator Vector2(Direction dir) {
             return new Vector2(dir.X, dir.Y);

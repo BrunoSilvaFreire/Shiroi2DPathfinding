@@ -5,6 +5,7 @@ using Shiroi.Unity.Pathfinding2D.Util;
 using UnityEngine;
 using Vexe.Runtime.Extensions;
 using Vexe.Runtime.Types;
+using Vexe.Runtime.Types.Others;
 
 namespace Shiroi.Unity.Pathfinding2D.Link {
     public class LinkPoint {
@@ -41,24 +42,36 @@ namespace Shiroi.Unity.Pathfinding2D.Link {
         public IGroundEntity Entity;
         public TileMap TileMap;
         public Color RunLinkColor = ColorUtil.FromHex("FFC107");
-        public Color JumpLinkColor = ColorUtil.FromHex("6D6A5E");
-        public Color FallLinkColor = ColorUtil.FromHex("5E676D");
-
-        [SerializeField]
-        private List<ILinkGenerator> generators = new List<ILinkGenerator>();
+        public Color JumpLinkColor = ColorUtil.FromHex("ff1744", 15);
+        public Color FallLinkColor = ColorUtil.FromHex("76FF03", 35);
 
         [SerializeField, Hide]
         private readonly SerializableDictionary<Node, LinkPoint> linkPoints =
             new SerializableDictionary<Node, LinkPoint>();
 
-        public List<ILinkGenerator> Generators {
-            get {
-                if (generators.IsEmpty()) {
-                    generators.AddRange(CreateDefaultGenerators());
-                }
-                return generators;
+        public LinkMap() {
+            Generators = CreateGenerators();
+        }
+
+        private List<ILinkGenerator> CreateGenerators() {
+            var gen = new List<ILinkGenerator>();
+            if (Entity != null) {
+                gen.AddRange(CreateDefaultGenerators());
+            } else {
+                Debug.LogWarning("Could not create default generators because the LinkMap's Entity is null");
             }
-            set { generators = value; }
+            return gen;
+        }
+
+        [Show]
+        public void RecreateGenerators() {
+            Generators = CreateGenerators();
+        }
+
+        [Show]
+        public List<ILinkGenerator> Generators {
+            get;
+            set;
         }
 
         private IEnumerable<ILinkGenerator> CreateDefaultGenerators() {
@@ -103,14 +116,10 @@ namespace Shiroi.Unity.Pathfinding2D.Link {
 
         private Color GetColor(LinkType linkType) {
             switch (linkType) {
-                case LinkType.Run:
-                    return RunLinkColor;
-                case LinkType.Fall:
-                    return FallLinkColor;
-                case LinkType.Jump:
-                    return JumpLinkColor;
-                default:
-                    throw new ArgumentOutOfRangeException(linkType.ToString());
+                case LinkType.Run: return RunLinkColor;
+                case LinkType.Fall: return FallLinkColor;
+                case LinkType.Jump: return JumpLinkColor;
+                default: throw new ArgumentOutOfRangeException(linkType.ToString());
             }
         }
     }

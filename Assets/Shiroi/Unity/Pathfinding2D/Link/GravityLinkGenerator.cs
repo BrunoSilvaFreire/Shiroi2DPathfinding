@@ -5,6 +5,8 @@ using Vexe.Runtime.Types;
 
 namespace Shiroi.Unity.Pathfinding2D.Link {
     public abstract class GravityLinkGenerator : AbstractLinkGenerator {
+        public const int DefaultDivisions = 5;
+
         [Show]
         public float TimeIncrementation = 0.1f;
 
@@ -30,9 +32,9 @@ namespace Shiroi.Unity.Pathfinding2D.Link {
 
         public override IEnumerable<ILink> Generate(Node node) {
             var list = new List<ILink>();
-            for (var x = 1; x <= SpeedIterations; x++) {
+            for (var x = 0; x < SpeedIterations; x++) {
                 var xSpeed = (float) x / SpeedIterations;
-                for (var y = 1; y <= JumpIterations; y++) {
+                for (var y = 0; y < JumpIterations; y++) {
                     var ySpeed = (float) y / JumpIterations;
                     var xFinal = Entity.MaxSpeed * xSpeed;
                     var yFinal = Entity.JumpHeight * ySpeed;
@@ -45,7 +47,7 @@ namespace Shiroi.Unity.Pathfinding2D.Link {
             return list;
         }
 
-        private void CheckGeneratedLink(ICollection<ILink> list, ILink generatedLink) {
+        private static void CheckGeneratedLink(ICollection<ILink> list, ILink generatedLink) {
             var from = generatedLink.From;
             var to = generatedLink.To;
             if (from == null || to == null || from.Platform == to.Platform || !from.Walkable || !to.Walkable) {
@@ -59,7 +61,7 @@ namespace Shiroi.Unity.Pathfinding2D.Link {
 
     public class FallLinkGenerator : GravityLinkGenerator {
         [Show]
-        public int SpeedDivisions = 20;
+        public int SpeedDivisions = DefaultDivisions;
 
         public FallLinkGenerator(LinkMap linkMap) : base(linkMap) {
         }
@@ -79,10 +81,10 @@ namespace Shiroi.Unity.Pathfinding2D.Link {
 
     public class JumpLinkGenerator : GravityLinkGenerator {
         [Show]
-        public int SpeedDivisions = 20;
+        public int SpeedDivisions = DefaultDivisions;
 
         [Show]
-        public int JumpDivisions = 20;
+        public int JumpDivisions = DefaultDivisions;
 
         public JumpLinkGenerator(LinkMap linkMap) : base(linkMap) {
         }

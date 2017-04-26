@@ -15,9 +15,9 @@ namespace Shiroi.Unity.Pathfinding2D.Util {
         }
 
         public static Color Invert(this Color color, byte a = 255) {
-            var r = 1 - color.r / 255;
-            var g = 1 - color.g / 255;
-            var b = 1 - color.b / 255;
+            var r = 1 - color.r;
+            var g = 1 - color.g;
+            var b = 1 - color.b;
             return new Color(r, g, b, a);
         }
     }

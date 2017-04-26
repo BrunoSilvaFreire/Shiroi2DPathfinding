@@ -6,6 +6,7 @@ using Shiroi.Unity.Pathfinding2D.Link;
 using Shiroi.Unity.Pathfinding2D.Util;
 using UnityEngine;
 using Vexe.Runtime.Types;
+using Vexe.Runtime.Types.Others;
 
 namespace Shiroi.Unity.Pathfinding2D {
     /// <summary>
@@ -29,7 +30,10 @@ namespace Shiroi.Unity.Pathfinding2D {
         public Color PlatformNodeColor = GetColor("3F51B5");
         public Color EdgeNodeColor = GetColor("9C27B0");
         public Color SoloNodeColor = GetColor("FF9800");
-
+        public bool DrawBorder = true;
+        public bool DrawPoints = true;
+        public bool DrawNodes = true;
+        public bool DrawPlatforms = true;
         private MapPosition mapMinPos = new MapPosition(0, 0);
         private MapPosition mapMaxPos = new MapPosition(20, 10);
         public LayerMask WorldMask;
@@ -130,11 +134,11 @@ namespace Shiroi.Unity.Pathfinding2D {
         }
 
         public float DirectionVectorConversionLimitX {
-            get { return NodeSizeX * 0.8f; }
+            get { return NodeSizeX / 2 * 0.8f; }
         }
 
         public float DirectionVectorConversionLimitY {
-            get { return NodeSizeX * 0.8f; }
+            get { return NodeSizeX / 2 * 0.8f; }
         }
 
         [Show]
@@ -267,34 +271,39 @@ namespace Shiroi.Unity.Pathfinding2D {
         }
 
         private void OnDrawGizmosSelected() {
-            Gizmos.color = MinColor;
-            Gizmos.DrawCube((Vector2) mapMinPos, NodeSize);
-            Gizmos.color = MaxColor;
-            Gizmos.DrawCube((Vector2) mapMaxPos, NodeSize);
-            Gizmos.color = BorderLineColor;
-            Gizmos.DrawWireCube(Center, Size);
-            foreach (var node in nodeMap.Values) {
-                if (node == null || !node.Walkable) {
-                    continue;
-                }
-                Gizmos.color = GetColor(node);
-                var pos = node.Position;
-                Gizmos.DrawCube(new Vector2(pos.X * NodeSizeX, pos.Y * NodeSizeY), NodeSize);
+            if (DrawPoints) {
+                Gizmos.color = MinColor;
+                Gizmos.DrawCube((Vector2) mapMinPos, NodeSize);
+                Gizmos.color = MaxColor;
+                Gizmos.DrawCube((Vector2) mapMaxPos, NodeSize);
             }
-            foreach (var platform in Platforms) {
-                platform.DrawGizmos();
+            if (DrawBorder) {
+                Gizmos.color = BorderLineColor;
+                Gizmos.DrawWireCube(Center, Size);
+            }
+            if (DrawNodes) {
+                foreach (var node in nodeMap.Values) {
+                    if (node == null || !node.Walkable) {
+                        continue;
+                    }
+                    Gizmos.color = GetColor(node);
+                    var pos = node.Position;
+                    Gizmos.DrawCube(new Vector2(pos.X * NodeSizeX, pos.Y * NodeSizeY), NodeSize);
+                }
+            }
+            if (DrawPlatforms) {
+                foreach (var platform in Platforms) {
+                    platform.DrawGizmos();
+                }
             }
         }
 
         private Color GetColor(Node node) {
             switch (node.Type) {
                 case Node.NodeType.LeftEdge:
-                case Node.NodeType.RightEdge:
-                    return EdgeNodeColor;
-                case Node.NodeType.Solo:
-                    return SoloNodeColor;
-                case Node.NodeType.Platform:
-                    return PlatformNodeColor;
+                case Node.NodeType.RightEdge: return EdgeNodeColor;
+                case Node.NodeType.Solo: return SoloNodeColor;
+                case Node.NodeType.Platform: return PlatformNodeColor;
             }
             throw new ArgumentOutOfRangeException(node.Type.ToString());
         }

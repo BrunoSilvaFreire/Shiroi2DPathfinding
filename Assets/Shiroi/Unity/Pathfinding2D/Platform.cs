@@ -6,6 +6,7 @@ using UnityEngine;
 using Vexe.Runtime.Types;
 
 namespace Shiroi.Unity.Pathfinding2D {
+    [Serializable]
     public class Platform {
         [Show]
         private readonly List<Node> nodes = new List<Node>();
@@ -13,7 +14,7 @@ namespace Shiroi.Unity.Pathfinding2D {
         public Platform(Node position) {
             LeftEdgeNode = position;
             RightEdgeNode = position;
-            Color = ColorUtil.Random();
+            Color = ColorUtil.Random(155);
         }
 
         public void DrawGizmos() {
@@ -100,7 +101,6 @@ namespace Shiroi.Unity.Pathfinding2D {
                 if (!IsDefined) {
                     throw new PlatformNotDefinedException();
                 }
-                return RightX - LeftX + 1;
                 return RightX - LeftX + 1;
             }
         }

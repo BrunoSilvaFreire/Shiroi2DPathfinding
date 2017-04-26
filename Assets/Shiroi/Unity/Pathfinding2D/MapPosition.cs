@@ -5,7 +5,7 @@ using Vexe.Runtime.Types;
 
 namespace Shiroi.Unity.Pathfinding2D {
     [Serializable]
-    public class MapPosition : IComparable<MapPosition> {
+    public struct MapPosition  {
         [Show]
         public int X {
             get;
@@ -18,7 +18,7 @@ namespace Shiroi.Unity.Pathfinding2D {
             set;
         }
 
-        public MapPosition(int x, int y) {
+        public MapPosition(int x, int y) : this() {
             X = x;
             Y = y;
         }
@@ -44,28 +44,6 @@ namespace Shiroi.Unity.Pathfinding2D {
             Y = (int) vector.y;
         }
 
-        protected bool Equals(MapPosition other) {
-            return X == other.X && Y == other.Y;
-        }
-
-        public override bool Equals(object obj) {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == this.GetType() && Equals((MapPosition) obj);
-        }
-
-        public override int GetHashCode() {
-            unchecked {
-                return (X * 397) ^ Y;
-            }
-        }
-
-        public int CompareTo(MapPosition other) {
-            if (ReferenceEquals(this, other)) return 0;
-            if (ReferenceEquals(null, other)) return 1;
-            var xComparison = X.CompareTo(other.X);
-            return xComparison != 0 ? xComparison : Y.CompareTo(other.Y);
-        }
 
         public bool IsWithin(MapPosition max, MapPosition min) {
             return X >= max.X && X <= min.X && Y >= min.Y && Y <= max.Y;
