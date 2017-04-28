@@ -5,7 +5,7 @@ using Vexe.Runtime.Types;
 
 namespace Shiroi.Unity.Pathfinding2D {
     [Serializable]
-    public struct MapPosition  {
+    public struct MapPosition {
         [Show]
         public int X {
             get;
@@ -44,13 +44,20 @@ namespace Shiroi.Unity.Pathfinding2D {
             Y = (int) vector.y;
         }
 
-
         public bool IsWithin(MapPosition max, MapPosition min) {
             return X >= max.X && X <= min.X && Y >= min.Y && Y <= max.Y;
         }
 
         public bool IsWithin(Vector2 max, Vector2 min) {
             return X >= max.x && X <= min.x && Y >= min.y && Y <= max.y;
+        }
+
+        public float Distance(MapPosition to) {
+            return Vector2.Distance(this, to);
+        }
+
+        public void DrawGizmos() {
+            Gizmos.DrawCube((Vector2) this, Vector2.one);
         }
     }
 }

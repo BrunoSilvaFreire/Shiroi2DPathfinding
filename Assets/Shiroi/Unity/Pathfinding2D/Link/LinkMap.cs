@@ -8,11 +8,11 @@ using Vexe.Runtime.Types;
 using Vexe.Runtime.Types.Others;
 
 namespace Shiroi.Unity.Pathfinding2D.Link {
+    [Serializable]
     public class LinkPoint {
         public Node Node;
 
-        private readonly SerializableDictionary<ILinkGenerator, List<ILink>> links =
-            new SerializableDictionary<ILinkGenerator, List<ILink>>();
+        private readonly LinkListDictionary links = new LinkListDictionary();
 
         public List<ILink> GetLinks(ILinkGenerator generator) {
             return links.GetOrPut(generator, () => new List<ILink>());
@@ -36,6 +36,14 @@ namespace Shiroi.Unity.Pathfinding2D.Link {
             var generatedLinks = generator.Generate(Node);
             GetLinks(generator).AddRange(generatedLinks);
         }
+
+        public ILink GetLink(Node to) {
+            return Links.First(link => link.To == to);
+        }
+    }
+
+    [Serializable]
+    class LinkListDictionary : SerializableDictionary<ILinkGenerator, List<ILink>> {
     }
 
     public class LinkMap : BaseBehaviour {
@@ -46,8 +54,7 @@ namespace Shiroi.Unity.Pathfinding2D.Link {
         public Color FallLinkColor = ColorUtil.FromHex("76FF03", 35);
 
         [SerializeField, Hide]
-        private readonly SerializableDictionary<Node, LinkPoint> linkPoints =
-            new SerializableDictionary<Node, LinkPoint>();
+        private readonly LinkPointDictionary linkPoints = new LinkPointDictionary();
 
         public LinkMap() {
             Generators = CreateGenerators();
@@ -101,7 +108,7 @@ namespace Shiroi.Unity.Pathfinding2D.Link {
             Debug.Log(string.Format("Calculated a total of {0} links.", TotalLinks));
         }
 
-        private LinkPoint GetLinkPoint(Node node) {
+        public LinkPoint GetLinkPoint(Node node) {
             return linkPoints.GetOrPut(node, () => new LinkPoint(node));
         }
 
@@ -122,5 +129,12 @@ namespace Shiroi.Unity.Pathfinding2D.Link {
                 default: throw new ArgumentOutOfRangeException(linkType.ToString());
             }
         }
+
+        public ILink GetLink(Node from, Node to) {
+            return GetLinkPoint(from).GetLink(to);
+        }
+    }
+    [Serializable]
+    public class LinkPointDictionary : SerializableDictionary<Node, LinkPoint> {
     }
 }

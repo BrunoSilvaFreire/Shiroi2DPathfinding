@@ -8,7 +8,6 @@ namespace Shiroi.Unity.Pathfinding2D {
     public class Node {
         public Node(MapPosition position, NodeType type) {
             Position = position;
-            Debug.Log(Position);
             Type = type;
         }
 
@@ -23,7 +22,6 @@ namespace Shiroi.Unity.Pathfinding2D {
             get { return Type != NodeType.Blocked; }
         }
 
-        [NotNull]
         public MapPosition Position {
             get;
             private set;
@@ -63,6 +61,10 @@ namespace Shiroi.Unity.Pathfinding2D {
             RightEdge,
             Solo,
             Platform,
+        }
+
+        public float Distance(Node neighbor) {
+            return Position.Distance(neighbor.Position);
         }
     }
 }

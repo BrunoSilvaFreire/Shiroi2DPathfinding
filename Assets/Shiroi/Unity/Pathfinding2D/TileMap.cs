@@ -21,7 +21,7 @@ namespace Shiroi.Unity.Pathfinding2D {
         public const float DefaultNodeBoxCastSize = 0.9F;
 
         public TileMap() {
-            nodeMap = new SerializableDictionary<MapPosition, Node>();
+            nodeMap = new TileDictionary();
         }
 
         public Color MaxColor = GetColor("E91E63");
@@ -41,7 +41,7 @@ namespace Shiroi.Unity.Pathfinding2D {
         public Vector2 NodeBoxCastSize = new Vector2(DefaultNodeBoxCastSize, DefaultNodeBoxCastSize);
 
         [SerializeField, Hide]
-        private readonly SerializableDictionary<MapPosition, Node> nodeMap;
+        private readonly TileDictionary nodeMap;
 
         public List<Platform> Platforms = new List<Platform>();
 
@@ -339,5 +339,8 @@ namespace Shiroi.Unity.Pathfinding2D {
         IEnumerator IEnumerable.GetEnumerator() {
             return GetEnumerator();
         }
+    }
+    [Serializable]
+    class TileDictionary : SerializableDictionary<MapPosition, Node> {
     }
 }
