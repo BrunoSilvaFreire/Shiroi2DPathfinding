@@ -6,47 +6,42 @@ using Vexe.Runtime.Types;
 namespace Shiroi.Unity.Pathfinding2D {
     [Serializable]
     public class Node {
+        [SerializeField, Hide]
+        private NodeType type;
+
+        [SerializeField, Hide]
+        private MapPosition position;
+
         public Node(MapPosition position, NodeType type) {
-            Position = position;
-            Type = type;
+            this.position = position;
+            this.type = type;
         }
 
-        [Show]
         public NodeType Type {
-            get;
-            [Hide] private set;
+            get { return type; }
         }
 
-        [Show]
         public bool Walkable {
             get { return Type != NodeType.Blocked; }
         }
 
         public MapPosition Position {
-            get;
-            private set;
+            get { return position; }
         }
-
-        [CanBeNull]
-        public Platform Platform {
-            get;
-            set;
-        }
-
         public int X {
-            get {
-                return Position.X;
-            }
+            get { return Position.X; }
         }
 
         public int Y {
-            get {
-                return Position.Y;
-            }
+            get { return Position.Y; }
         }
 
         public Vector2 PositionVec {
             get { return new Vector2(X + .5f, Y + .5F); }
+        }
+
+        public bool Empty {
+            get { return Type == NodeType.Empty; }
         }
 
         public override string ToString() {

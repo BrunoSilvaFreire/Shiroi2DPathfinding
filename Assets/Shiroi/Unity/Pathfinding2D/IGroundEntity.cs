@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Shiroi.Unity.Pathfinding2D {
     public interface IGroundEntity {

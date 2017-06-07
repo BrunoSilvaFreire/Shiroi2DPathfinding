@@ -5,22 +5,36 @@ using Vexe.Runtime.Types;
 
 namespace Shiroi.Unity.Pathfinding2D {
     [Serializable]
-    public struct MapPosition {
+    public class MapPosition {
+        [SerializeField, Hide]
+        private int x;
+
+        [SerializeField, Hide]
+        private int y;
+
+        public MapPosition() {
+        }
+
+        public MapPosition(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
         [Show]
         public int X {
-            get;
-            set;
+            get { return x; }
+            set { x = value; }
         }
 
         [Show]
         public int Y {
-            get;
-            set;
+            get { return y; }
+            set { y = value; }
         }
 
-        public MapPosition(int x, int y) : this() {
-            X = x;
-            Y = y;
+        public void Init(int x, int y) {
+            this.x = x;
+            this.y = y;
         }
 
         public Vector2 ToWorldPosition(Vector2 vectorSize) {

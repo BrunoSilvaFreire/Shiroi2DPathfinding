@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Shiroi.Unity.Pathfinding2D.Tile;
 using UnityEngine;
 using Vexe.Runtime.Extensions;
 

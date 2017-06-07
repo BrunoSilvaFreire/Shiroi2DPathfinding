@@ -8,13 +8,43 @@ using Vexe.Runtime.Types;
 namespace Shiroi.Unity.Pathfinding2D {
     [Serializable]
     public class Platform {
-        [Show]
-        private readonly List<Node> nodes = new List<Node>();
+        [SerializeField, Hide]
+        private List<Node> nodes;
+
+        [SerializeField, Hide]
+        private Node leftEdgeNode;
+
+        [SerializeField, Hide]
+        private Node rightEdgeNode;
+
+        [SerializeField]
+        private Color color;
+
+        public Platform() {
+        }
 
         public Platform(Node position) {
             LeftEdgeNode = position;
+            this.nodes = new List<Node>();
             RightEdgeNode = position;
             Color = ColorUtil.Random(155);
+        }
+
+        protected bool Equals(Platform other) {
+            return Equals(leftEdgeNode, other.leftEdgeNode) && Equals(rightEdgeNode, other.rightEdgeNode);
+        }
+
+        public override bool Equals(object obj) {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == this.GetType() && Equals((Platform) obj);
+        }
+
+        public override int GetHashCode() {
+            unchecked {
+                return ((leftEdgeNode != null ? leftEdgeNode.GetHashCode() : 0) * 397) ^
+                       (rightEdgeNode != null ? rightEdgeNode.GetHashCode() : 0);
+            }
         }
 
         public void DrawGizmos() {
@@ -34,34 +64,29 @@ namespace Shiroi.Unity.Pathfinding2D {
             get { return new Vector2(XCenter, Y); }
         }
 
-        [Show]
         public float XCenter {
             get { return (float) (LeftX + RightX) / 2; }
         }
 
-        [Show]
         public Color Color {
-            get;
-            set;
+            get { return color; }
+            set { color = value; }
         }
 
-        [Show]
         public Node LeftEdgeNode {
-            get;
-            private set;
+            get { return leftEdgeNode; }
+            private set { leftEdgeNode = value; }
         }
 
-        [Show]
         public Node RightEdgeNode {
-            get;
-            private set;
+            get { return rightEdgeNode; }
+            private set { rightEdgeNode = value; }
         }
 
         private bool IsDefined {
             get { return LeftEdgeNode != null && RightEdgeNode != null; }
         }
 
-        [Show]
         public int Y {
             get {
                 if (!IsDefined) {
@@ -76,7 +101,6 @@ namespace Shiroi.Unity.Pathfinding2D {
             }
         }
 
-        [Show]
         public int LeftX {
             get {
                 if (!IsDefined) {
@@ -86,7 +110,6 @@ namespace Shiroi.Unity.Pathfinding2D {
             }
         }
 
-        [Show]
         public int RightX {
             get {
                 if (!IsDefined) {
@@ -123,12 +146,19 @@ namespace Shiroi.Unity.Pathfinding2D {
                 Debug.LogWarning("Tried to add node " + node + " to platform " + this + ", but is already contained!");
                 return;
             }
-            node.Platform = this;
             if (LeftEdgeNode == null || node.X < LeftX) {
+                var oldLeft = LeftEdgeNode;
                 LeftEdgeNode = node;
+                if (oldLeft != null) {
+                    AddNode(oldLeft);
+                }
             }
             if (RightEdgeNode == null || node.X > RightX) {
+                var oldRight = RightEdgeNode;
                 RightEdgeNode = node;
+                if (oldRight != null) {
+                    AddNode(oldRight);
+                }
             }
             if (node != RightEdgeNode && node != LeftEdgeNode) {
                 Nodes.Add(node);
@@ -144,15 +174,14 @@ namespace Shiroi.Unity.Pathfinding2D {
         }
 
         public bool IsNextTo(Node node, int limit = 1) {
+            if (node == null) {
+                throw new ArgumentNullException("node");
+            }
             return node.X >= LeftX - limit && node.X <= RightX + limit && node.Y == Y;
         }
 
         public bool Contains(Node node) {
             return node == LeftEdgeNode || node == RightEdgeNode || Nodes.Contains(node);
-        }
-
-        public override string ToString() {
-            return string.Format("Platform(Y={0}, LeftX={1}, RightX={2})", Y, LeftX, RightX);
         }
 
         public void Merge(Platform platform) {

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Shiroi.Unity.Pathfinding2D.Link;
+using Shiroi.Unity.Pathfinding2D.Tile;
 using UnityEngine;
 using Vexe.Runtime.Types;
 

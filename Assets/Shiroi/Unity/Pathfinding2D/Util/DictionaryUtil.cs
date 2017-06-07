@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Vexe.Runtime.Types.Others;
 
 namespace Shiroi.Unity.Pathfinding2D.Util {
     public static class DictionaryUtil {
