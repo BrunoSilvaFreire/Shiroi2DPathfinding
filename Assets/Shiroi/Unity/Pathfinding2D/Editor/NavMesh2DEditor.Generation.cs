@@ -9,41 +9,41 @@ namespace Shiroi.Unity.Pathfinding2D.Editor {
         public void GenerateNodes(NavMesh2D navmesh) {
             var min = navmesh.Min;
             var max = navmesh.Max;
-            var nodes = new Node[navmesh.Area];
+            var nodes = new NavMesh2D.GeometryNode[navmesh.Area];
             for (var x = min.x; x <= max.x; x++) {
                 for (var y = min.y; y <= max.y; y++) {
                     var index = navmesh.IndexOfUnsafe(x, y);
-                    Node.NodeFlags flags = 0;
+                    NavMesh2D.GeometryNode.NodeFlags flags = 0;
                     if (Test(navmesh, x, y)) {
-                        flags |= Node.NodeFlags.Solid;
+                        flags |= NavMesh2D.GeometryNode.NodeFlags.Solid;
                     }
                     else {
                         bool supported = false;
                         if (Test(navmesh, x, y - 1)) {
-                            flags |= Node.NodeFlags.Supported;
+                            flags |= NavMesh2D.GeometryNode.NodeFlags.Supported;
                             supported = true;
                         }
 
                         if (Test(navmesh, x - 1, y)) {
-                            flags |= Node.NodeFlags.LeftWall;
+                            flags |= NavMesh2D.GeometryNode.NodeFlags.LeftWall;
                         }
                         else {
                             if (supported && !Test(navmesh, x - 1, y - 1)) {
-                                flags |= Node.NodeFlags.LeftEdge;
+                                flags |= NavMesh2D.GeometryNode.NodeFlags.LeftEdge;
                             }
                         }
 
                         if (Test(navmesh, x + 1, y)) {
-                            flags |= Node.NodeFlags.RightWall;
+                            flags |= NavMesh2D.GeometryNode.NodeFlags.RightWall;
                         }
                         else {
                             if (supported && !Test(navmesh, x + 1, y - 1)) {
-                                flags |= Node.NodeFlags.RightEdge;
+                                flags |= NavMesh2D.GeometryNode.NodeFlags.RightEdge;
                             }
                         }
                     }
 
-                    nodes[index] = new Node {
+                    nodes[index] = new NavMesh2D.GeometryNode {
                         flags = flags
                     };
                 }
