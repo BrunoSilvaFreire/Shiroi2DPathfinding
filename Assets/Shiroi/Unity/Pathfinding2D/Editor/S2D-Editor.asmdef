@@ -1,0 +1,16 @@
+{
+    "name": "S2D-Editor",
+    "references": [
+        "GUID:0c4fd3511e1a2caf6856ea9cba4750bd"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}
