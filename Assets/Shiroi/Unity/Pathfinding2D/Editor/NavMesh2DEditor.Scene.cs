@@ -6,6 +6,9 @@ using UnityEngine;
 namespace Shiroi.Unity.Pathfinding2D.Editor {
     public partial class NavMesh2DEditor {
         public const float kBoundariesWidth = 2F;
+        public bool drawSolids;
+        public bool drawEmpty;
+        public bool drawMouse;
 
         private void OnSceneGUI() {
             var navmesh = target as NavMesh2D;
@@ -42,6 +45,14 @@ namespace Shiroi.Unity.Pathfinding2D.Editor {
                 for (var y = min.y; y <= max.y; y++) {
                     var index = navmesh.IndexOfUnsafe(x, y);
                     var node = nodes[index];
+                    if (!drawSolids && node.IsSolid()) {
+                        continue;
+                    }
+
+                    if (!drawEmpty && node.IsEmpty()) {
+                        continue;
+                    }
+
                     Color color = Color.black;
                     color.a = node.IsSolid() ? 0.9F : 0.5f;
                     Color outlineColor = Color.black;
@@ -109,7 +120,7 @@ namespace Shiroi.Unity.Pathfinding2D.Editor {
             var worldPosition = Camera.current.ScreenToWorldPoint(mousePos);
             worldPosition.z = 0;
             var cell = navmesh.grid.WorldToCell(worldPosition);
-            if (!navmesh.IsOutOfBounds(cell.x, cell.y)) {
+            if (drawMouse && !navmesh.IsOutOfBounds(cell.x, cell.y)) {
                 var node = navmesh.NodeUnsafe(cell.x, cell.y);
                 var index = navmesh.IndexOfUnsafe(cell.x, cell.y);
                 Handles.Label(
@@ -127,23 +138,9 @@ namespace Shiroi.Unity.Pathfinding2D.Editor {
         }
 
         private static void DrawBoundaries(NavMesh2D navmesh) {
-            var min = navmesh.MinWorld;
-            var max = navmesh.MaxWorld;
-            Handles.DrawDottedLines(
-                new[] {
-                    new Vector3(min.x, min.y),
-                    new Vector3(min.x, max.y),
-                    new Vector3(max.x, max.y),
-                    new Vector3(max.x, min.y)
-                },
-                new[] {
-                    0, 1,
-                    1, 2,
-                    2, 3,
-                    3, 0
-                },
-                kBoundariesWidth
-            );
+            var min = navmesh.Min;
+            var max = navmesh.Max;
+            EditorX.DrawBoundaries(min, max, navmesh.grid);
         }
 
         private static void DoPositionHandle(

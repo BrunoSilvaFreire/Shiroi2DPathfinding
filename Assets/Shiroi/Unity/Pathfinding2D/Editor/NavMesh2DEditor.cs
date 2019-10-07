@@ -1,4 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
+using Shiroi.Unity.Pathfinding2D.Editor.Validation;
 using Shiroi.Unity.Pathfinding2D.Runtime;
 using UnityEditor;
 using UnityEngine;
@@ -6,30 +8,49 @@ using UnityEngine;
 namespace Shiroi.Unity.Pathfinding2D.Editor {
     [CustomEditor(typeof(NavMesh2D))]
     public partial class NavMesh2DEditor : UnityEditor.Editor {
+        private void OnEnable() {
+            var navmesh = target as NavMesh2D;
+            if (navmesh == null) {
+                return;
+            }
+
+            boxCastSize = navmesh.grid.cellSize * kDefaultBoxcastSize;
+        }
+
         public override void OnInspectorGUI() {
             var navmesh = target as NavMesh2D;
             if (navmesh == null) {
                 return;
             }
 
-            navmesh.grid = (Grid) EditorGUILayout.ObjectField("Grid", navmesh.grid, typeof(Grid), true);
-
-            navmesh.worldMask = UnityX.LayerMaskField("World Mask", navmesh.worldMask);
-            if (GUILayout.Button("Generate Mesh")) {
-                GenerateNodes(navmesh);
+            using (new EditorGroupScope("NavMesh")) {
+                navmesh.grid = (Grid) EditorGUILayout.ObjectField("Grid", navmesh.grid, typeof(Grid), true);
+                var nMin = EditorGUILayout.Vector2IntField("Min", navmesh.Min);
+                var nMax = EditorGUILayout.Vector2IntField("Max", navmesh.Max);
+                navmesh.SetMinMax(nMin, nMax);
+                navmesh.worldMask = UnityX.LayerMaskField("World Mask", navmesh.worldMask);
+                if (GUILayout.Button("Generate Mesh")) {
+                    GenerateNodes(navmesh);
+                }
             }
 
-            using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox)) {
+            using (new EditorGroupScope("Info")) {
                 GUI.enabled = false;
-                EditorGUILayout.PrefixLabel("NavMesh info");
                 EditorGUILayout.Vector2Field("Size", new Vector2(navmesh.Width, navmesh.Height));
-                EditorGUILayout.IntField("Area", (int) navmesh.Area);
+                EditorGUILayout.LabelField("Area", navmesh.Area.ToString());
                 GUI.enabled = true;
             }
 
-            using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox)) {
-                EditorGUILayout.PrefixLabel("Editor");
+            using (new EditorGroupScope("Editor")) {
                 boxCastSize = EditorGUILayout.Vector2Field("BoxCastSize", boxCastSize);
+                drawEmpty = EditorGUILayout.Toggle("Draw Empty", drawEmpty);
+                drawSolids = EditorGUILayout.Toggle("Draw Solids", drawSolids);
+                drawMouse  = EditorGUILayout.Toggle("Draw Over Mouse", drawMouse);
+                Validators.ValidateInEditor(
+                    navmesh,
+                    Validators.HasNodes,
+                    Validators.NodesMatchGeometry
+                );
             }
         }
     }

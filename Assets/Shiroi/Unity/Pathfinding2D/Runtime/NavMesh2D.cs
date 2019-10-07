@@ -69,6 +69,10 @@ namespace Shiroi.Unity.Pathfinding2D.Runtime {
             public bool IsRightEdge() {
                 return Is(NodeFlags.RightEdge);
             }
+
+            public bool IsEmpty() {
+                return flags == 0;
+            }
         }
 
         [SerializeField, HideInInspector]
@@ -144,6 +148,11 @@ namespace Shiroi.Unity.Pathfinding2D.Runtime {
             var x = index % Width;
             var y = index / Width;
             return new Vector2Int((int) (min.x + x), (int) (min.y + y));
+        }
+
+        public bool IsOutOfBounds(Vector2 currentPosition) {
+            var cell = grid.WorldToCell(currentPosition);
+            return IsOutOfBounds(cell.x, cell.y);
         }
     }
 

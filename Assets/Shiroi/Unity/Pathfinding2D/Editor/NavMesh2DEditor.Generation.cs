@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Shiroi.Unity.Pathfinding2D.Editor {
     public partial class NavMesh2DEditor {
         public const float kDefaultBoxcastSize = 0.9F;
-        public Vector2 boxCastSize = new Vector2(kDefaultBoxcastSize, kDefaultBoxcastSize);
+        public Vector2 boxCastSize;
 
         public void GenerateNodes(NavMesh2D navmesh) {
             var min = navmesh.Min;
