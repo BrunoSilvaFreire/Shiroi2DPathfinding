@@ -1,0 +1,13 @@
+{
+  "name": "me.ddevil.s2d",
+  "displayName": "Shiroi 2D Pathfinding",
+  "version": "0.0.1",
+  "unity": "2019.2",
+  "description": "2D Pathfinding solution for Unity.",
+  "keywords": [
+    "2d",
+    "Pathfinding"
+  ],
+  "category": "2D",
+  "type": "tool"
+}
