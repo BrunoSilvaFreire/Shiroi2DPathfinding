@@ -17,7 +17,6 @@ namespace Shiroi.Pathfinding2D.Kuroi {
                 directLinks = new DirectLink[0]
             };
 
-
             [Serializable]
             public class GravitationalLink : ILink {
                 [SerializeField]
