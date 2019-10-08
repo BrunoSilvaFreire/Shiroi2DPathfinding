@@ -1,4 +1,5 @@
 using System;
+using Shiroi.Pathfinding2D.Editor;
 using Shiroi.Pathfinding2D.Runtime;
 using UnityEditor;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace Shiroi.Pathfinding2D.Kuroi.Editor {
             if (navmesh.grid == null) {
                 return;
             }
+
             DrawNodes(navmesh);
             DrawLabels(navmesh);
         }
@@ -52,35 +54,21 @@ namespace Shiroi.Pathfinding2D.Kuroi.Editor {
                     }
 
                     if (node.IsLeftEdge()) {
-                        color.r = 1;
+                        //color.r = 1;
                         outlineColor.r = 1;
                     }
 
                     if (node.IsRightEdge()) {
-                        color.b = 1;
+                        //color.b = 1;
                         outlineColor.b = 1;
                     }
 
-                    var pos = navmesh.WorldCenter(x, y);
-                    var cellSize = navmesh.grid.cellSize;
-                    var width = cellSize.x;
-                    var height = cellSize.y;
-                    Handles.DrawSolidRectangleWithOutline(
-                        new Rect(
-                            pos.x - width / 2,
-                            pos.y - height / 2,
-                            width,
-                            height
-                        ),
-                        color,
-                        outlineColor
-                    );
+                    UnityX.DrawCell(x, y, navmesh.grid, color, outlineColor);
                 }
             }
         }
 
         private void DrawLabels(KuroiNavMesh navmesh) {
-            
             var min = navmesh.MinWorld;
             var max = navmesh.MaxWorld;
             var nodes = navmesh.Nodes;

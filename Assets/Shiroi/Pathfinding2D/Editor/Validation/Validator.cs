@@ -69,7 +69,7 @@ namespace Shiroi.Pathfinding2D.Editor.Validation {
     }
 
     public static class Validators<L, G> {
-        public static string ValidateLinksMatchGeometry<L, G>(LinkMap2D<L, G> map) {
+        public static string ValidateLinksMatchGeometry(LinkMap2D<L, G> map) {
             var n = map.navMesh;
             if (n == null) {
                 return null;
