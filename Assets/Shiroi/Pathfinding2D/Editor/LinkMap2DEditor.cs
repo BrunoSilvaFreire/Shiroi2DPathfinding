@@ -14,13 +14,13 @@ namespace Shiroi.Pathfinding2D.Editor {
             }
 
             using (new EditorGroupScope("Link Map")) {
-                linkMap.navMesh =
-                    (NavMesh2D<G>) EditorGUILayout.ObjectField("Navmesh", linkMap.navMesh, typeof(N), true);
+                linkMap.NavMesh =
+                    (NavMesh2D<G>) EditorGUILayout.ObjectField("Navmesh", linkMap.NavMesh, typeof(N), true);
                 OnLinkMapGUI();
             }
 
             using (new EditorGroupScope("Info")) {
-                var l = linkMap.links;
+                var l = linkMap.nodes;
                 if (l != null) {
                     EditorGUILayout.LabelField("Link count", l.Length.ToString());
                 }
@@ -46,19 +46,19 @@ namespace Shiroi.Pathfinding2D.Editor {
         protected virtual void OnLinkMapGUI() { }
 
         public void GenerateLinks(LinkMap2D<L, G> linkMap) {
-            var navmesh = linkMap.navMesh;
+            var navmesh = linkMap.NavMesh;
             var min = navmesh.Min;
             var max = navmesh.Max;
             var nodes = new L[navmesh.Area];
 
             for (var x = min.x; x <= max.x; x++) {
                 for (var y = min.y; y <= max.y; y++) {
-                    var index = linkMap.navMesh.IndexOfUnsafe(x, y);
+                    var index = linkMap.NavMesh.IndexOfUnsafe(x, y);
                     nodes[index] = linkMap.Generate(x, y);
                 }
             }
 
-            linkMap.links = nodes;
+            linkMap.nodes = nodes;
         }
 
         protected virtual void OnEditorGUI() { }

@@ -70,12 +70,12 @@ namespace Shiroi.Pathfinding2D.Editor.Validation {
 
     public static class Validators<L, G> {
         public static string ValidateLinksMatchGeometry(LinkMap2D<L, G> map) {
-            var n = map.navMesh;
+            var n = map.NavMesh;
             if (n == null) {
                 return null;
             }
 
-            var l = map.links;
+            var l = map.nodes;
 
             if (l != null && n.Area != l.Length) {
                 return $"Number of links doesn't match number of nodes in navmesh. ({n.Area} vs {l.Length})";
@@ -86,7 +86,7 @@ namespace Shiroi.Pathfinding2D.Editor.Validation {
 
 
         public static string ValidateHasNavMesh(LinkMap2D<L, G> map) {
-            return map.navMesh == null ? "Missing navmesh! You can't generate links without a navmesh bound.'" : null;
+            return map.NavMesh == null ? "Missing navmesh! You can't generate links without a navmesh bound.'" : null;
         }
 
         public static Validator<LinkMap2D<L, G>> HasNavMesh = (Validation<LinkMap2D<L, G>>) ValidateHasNavMesh;

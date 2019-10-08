@@ -25,11 +25,11 @@ namespace Shiroi.Pathfinding2D.Kuroi.Editor {
 
         private uint FindHighest() {
             var l = (KuroiLinkMap) target;
-            var first = l.links[0];
+            var first = l.nodes[0];
             uint highest = 0;
             uint highestScore = (uint) (first.directLinks.Length + first.gravitationalLinks.Length);
-            for (uint i = 0; i < l.links.Length; i++) {
-                var link = l.links[i];
+            for (uint i = 0; i < l.nodes.Length; i++) {
+                var link = l.nodes[i];
                 uint c = (uint) (link.directLinks.Length + link.gravitationalLinks.Length);
                 if (c > highestScore) {
                     highest = i;
@@ -45,6 +45,7 @@ namespace Shiroi.Pathfinding2D.Kuroi.Editor {
             linkMap.timeStep = EditorGUILayout.Slider("Time Step", linkMap.timeStep, 0.001F, 100);
             linkMap.jumpCount = (uint) EditorGUILayout.IntField("Jump Count", (int) linkMap.jumpCount);
             linkMap.hitBoxSize = EditorGUILayout.Vector2Field("Hitbox Size", linkMap.hitBoxSize);
+            linkMap.maxForce = EditorGUILayout.Vector2Field("Max Force", linkMap.maxForce);
         }
 
         protected override void OnEditorGUI() {
@@ -55,13 +56,13 @@ namespace Shiroi.Pathfinding2D.Kuroi.Editor {
         }
 
         private void OnSceneGUI() {
-            var linkmap = (LinkMap2D<KuroiLinkMap.LinkNode, KuroiNavMesh.GeometryNode>) target;
-            var navmesh = linkmap.navMesh;
+            var linkmap = (KuroiLinkMap) target;
+            var navmesh = linkmap.NavMesh;
             if (navmesh == null) {
                 return;
             }
 
-            var navigationNodes = linkmap.links;
+            var navigationNodes = linkmap.nodes;
             if (navigationNodes == null || navigationNodes.Length != navmesh.Area) {
                 return;
             }
@@ -103,6 +104,12 @@ namespace Shiroi.Pathfinding2D.Kuroi.Editor {
                 }
             }
 
+            /*Handles.DrawSolidRectangleWithOutline(
+                new Rect(
+                    (Vector2) mousePos - linkmap.hitBoxSize / 2, linkmap.hitBoxSize),
+                Color.red,
+                Color.clear
+            );*/
             for (var x = -linkRadius; x <= linkRadius; x++) {
                 for (var y = -linkRadius; y <= linkRadius; y++) {
                     var gridPos = new Vector3Int(x, y, 0) + mouseCell;
@@ -146,7 +153,7 @@ namespace Shiroi.Pathfinding2D.Kuroi.Editor {
                                 color.b = prog;
                                 color.a = 0.5F + (prog / 2);
                                 Handles.color = color;
-                                Handles.DrawDottedLine(current, next, size);
+                                Handles.DrawLine(current, next);
                             }
                         }
                     }

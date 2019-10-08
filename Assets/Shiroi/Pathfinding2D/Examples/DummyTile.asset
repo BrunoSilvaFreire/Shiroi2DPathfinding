@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DummyTile
   m_EditorClassIdentifier: 
   m_Sprite: {fileID: 21300000, guid: 8f770a86979f7952ebf85c3b95aa93ef, type: 3}
-  m_Color: {r: 0.5188679, g: 0.5188679, b: 0.5188679, a: 1}
+  m_Color: {r: 0.1, g: 0.1, b: 0.1, a: 1}
   m_Transform:
     e00: 1
     e01: 0

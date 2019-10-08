@@ -2,8 +2,15 @@ using UnityEngine;
 
 namespace Shiroi.Pathfinding2D.Runtime {
     public abstract class LinkMap2D<L, G> : MonoBehaviour {
-        public NavMesh2D<G> navMesh;
-        public L[] links;
+        [SerializeField]
+        private Object serializedNavMesh;
+
+        public NavMesh2D<G> NavMesh {
+            get => serializedNavMesh as NavMesh2D<G>;
+            set => serializedNavMesh = value;
+        }
+
+        public L[] nodes;
 
         public abstract L Generate(
             int x,

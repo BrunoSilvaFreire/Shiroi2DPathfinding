@@ -33,5 +33,6 @@ namespace Shiroi.Pathfinding2D.Editor {
                 second
             );
         }
+        
     }
 }

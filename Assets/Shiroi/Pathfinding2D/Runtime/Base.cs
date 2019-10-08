@@ -4,6 +4,7 @@ using UnityEngine;
 namespace Shiroi.Pathfinding2D.Runtime {
     public interface ILink {
         uint Destination { get; }
+        float CalculateCost<L, G>(LinkMap2D<L, G> linkMap2D);
     }
 
     [Serializable]
@@ -16,5 +17,12 @@ namespace Shiroi.Pathfinding2D.Runtime {
         }
 
         public uint Destination => destination;
+        public float CalculateCost<L, G>(LinkMap2D<L, G> linkMap2D) {
+            return linkMap2D.NavMesh.grid.cellSize.x;
+        }
+
+        public override string ToString() {
+            return $"Direct({nameof(destination)}: {destination})";
+        }
     }
 }
