@@ -5,15 +5,6 @@ using UnityEngine;
 
 namespace Shiroi.Pathfinding2D.Editor {
     public partial class NavMesh2DEditor<G> : UnityEditor.Editor {
-        private void OnEnable() {
-            var navmesh = target as NavMesh2D<G>;
-            if (navmesh == null) {
-                return;
-            }
-
-            boxCastSize = navmesh.grid.cellSize * kDefaultBoxcastSize;
-        }
-
         public override void OnInspectorGUI() {
             var navmesh = target as NavMesh2D<G>;
             if (navmesh == null) {
@@ -26,8 +17,9 @@ namespace Shiroi.Pathfinding2D.Editor {
                 var nMax = EditorGUILayout.Vector2IntField("Max", navmesh.Max);
                 navmesh.SetMinMax(nMin, nMax);
                 navmesh.worldMask = UnityX.LayerMaskField("World Mask", navmesh.worldMask);
+                OnNavMeshGUI();
                 if (GUILayout.Button("Generate Mesh")) {
-                    //GenerateNodes(navmesh);
+                    GenerateNodes(navmesh);
                 }
             }
 
@@ -39,7 +31,6 @@ namespace Shiroi.Pathfinding2D.Editor {
             }
 
             using (new EditorGroupScope("Editor")) {
-                boxCastSize = EditorGUILayout.Vector2Field("BoxCastSize", boxCastSize);
                 drawEmpty = EditorGUILayout.Toggle("Draw Empty", drawEmpty);
                 drawSolids = EditorGUILayout.Toggle("Draw Solids", drawSolids);
                 drawMouse = EditorGUILayout.Toggle("Draw Over Mouse", drawMouse);
@@ -50,5 +41,7 @@ namespace Shiroi.Pathfinding2D.Editor {
                 );
             }
         }
+
+        public virtual void OnNavMeshGUI() { }
     }
 }

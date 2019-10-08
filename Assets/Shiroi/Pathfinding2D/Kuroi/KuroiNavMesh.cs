@@ -1,8 +1,11 @@
 using System;
 using Shiroi.Pathfinding2D.Runtime;
+using UnityEngine;
 
 namespace Shiroi.Pathfinding2D.Kuroi {
     public class KuroiNavMesh : NavMesh2D<KuroiNavMesh.GeometryNode> {
+        public Vector2 boxCastSize;
+
         [Serializable]
         public struct GeometryNode {
             public NodeFlags flags;
@@ -73,6 +76,45 @@ namespace Shiroi.Pathfinding2D.Kuroi {
             public bool IsEmpty() {
                 return flags == 0;
             }
+        }
+
+        private bool Test(int x, int y) {
+            var position = grid.GetCellCenterWorld(new Vector3Int(x, y, 0));
+            var found = Physics2D.OverlapBox(position, boxCastSize, 0, worldMask);
+            return found;
+        }
+
+        public override GeometryNode GenerateNode(int x, int y) {
+            GeometryNode.NodeFlags flags = 0;
+            if (Test(x, y)) {
+                flags |= GeometryNode.NodeFlags.Solid;
+            } else {
+                var supported = false;
+                if (Test(x, y - 1)) {
+                    flags |= GeometryNode.NodeFlags.Supported;
+                    supported = true;
+                }
+
+                if (Test(x - 1, y)) {
+                    flags |= GeometryNode.NodeFlags.LeftWall;
+                } else {
+                    if (supported && !Test(x - 1, y - 1)) {
+                        flags |= GeometryNode.NodeFlags.LeftEdge;
+                    }
+                }
+
+                if (Test(x + 1, y)) {
+                    flags |= GeometryNode.NodeFlags.RightWall;
+                } else {
+                    if (supported && !Test(x + 1, y - 1)) {
+                        flags |= GeometryNode.NodeFlags.RightEdge;
+                    }
+                }
+            }
+
+            return new GeometryNode {
+                flags = flags
+            };
         }
     }
 }

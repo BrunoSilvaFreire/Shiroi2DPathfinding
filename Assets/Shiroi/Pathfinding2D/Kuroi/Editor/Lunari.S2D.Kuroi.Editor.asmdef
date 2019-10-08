@@ -2,7 +2,8 @@
     "name": "S2D-Kuroi-Editor",
     "references": [
         "GUID:89673fe2564fcffc59eda3b7f949bf62",
-        "GUID:65b5d72d2769025feaa82404001b1c30"
+        "GUID:65b5d72d2769025feaa82404001b1c30",
+        "GUID:0c4fd3511e1a2caf6856ea9cba4750bd"
     ],
     "includePlatforms": [
         "Editor"

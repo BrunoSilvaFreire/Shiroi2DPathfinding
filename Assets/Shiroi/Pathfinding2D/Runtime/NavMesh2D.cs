@@ -2,7 +2,7 @@
 using UnityEngine;
 
 namespace Shiroi.Pathfinding2D.Runtime {
-    public class NavMesh2D<G> : MonoBehaviour {
+    public abstract class NavMesh2D<G> : MonoBehaviour {
         [SerializeField, HideInInspector]
         private G[] nodes;
 
@@ -81,6 +81,8 @@ namespace Shiroi.Pathfinding2D.Runtime {
             var cell = grid.WorldToCell(currentPosition);
             return IsOutOfBounds(cell.x, cell.y);
         }
+
+        public abstract G GenerateNode(int x, int y);
     }
 
     public class PositionOutOfBoundsException : Exception {
