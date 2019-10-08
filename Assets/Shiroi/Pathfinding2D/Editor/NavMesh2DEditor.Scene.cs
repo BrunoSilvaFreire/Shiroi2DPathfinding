@@ -1,17 +1,16 @@
 using JetBrains.Annotations;
-using Shiroi.Unity.Pathfinding2D.Runtime;
+using Shiroi.Pathfinding2D.Runtime;
 using UnityEditor;
 using UnityEngine;
 
-namespace Shiroi.Unity.Pathfinding2D.Editor {
-    public partial class NavMesh2DEditor {
-        public const float kBoundariesWidth = 2F;
+namespace Shiroi.Pathfinding2D.Editor {
+    public partial class NavMesh2DEditor<G> {
         public bool drawSolids;
         public bool drawEmpty;
         public bool drawMouse;
 
         private void OnSceneGUI() {
-            var navmesh = target as NavMesh2D;
+            var navmesh = target as NavMesh2D<G>;
             if (navmesh == null) {
                 return;
             }
@@ -27,12 +26,12 @@ namespace Shiroi.Unity.Pathfinding2D.Editor {
             DoPositionHandle(grid, ref max);
             navmesh.Min = min;
             navmesh.Max = max;
-            DrawNodes(navmesh);
+            //DrawNodes(navmesh);
             DrawBoundaries(navmesh);
-            DrawLabels(navmesh);
+            //DrawLabels(navmesh);
         }
 
-        private void DrawNodes(NavMesh2D navmesh) {
+        /*private void DrawNodes(NavMesh2D<G> navmesh) {
             var nodes = navmesh.Nodes;
             if (nodes == null || nodes.Length != navmesh.Area) {
                 return;
@@ -135,9 +134,9 @@ namespace Shiroi.Unity.Pathfinding2D.Editor {
                     EditorStyles.helpBox
                 );
             }
-        }
+        }*/
 
-        private static void DrawBoundaries(NavMesh2D navmesh) {
+        private static void DrawBoundaries(NavMesh2D<G> navmesh) {
             var min = navmesh.Min;
             var max = navmesh.Max;
             EditorX.DrawBoundaries(min, max, navmesh.grid);

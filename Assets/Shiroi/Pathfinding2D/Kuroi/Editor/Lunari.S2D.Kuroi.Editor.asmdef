@@ -1,0 +1,17 @@
+{
+    "name": "S2D-Kuroi-Editor",
+    "references": [
+        "GUID:89673fe2564fcffc59eda3b7f949bf62",
+        "GUID:65b5d72d2769025feaa82404001b1c30"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}

@@ -1,82 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Shiroi.Unity.Pathfinding2D.Runtime {
-    public class NavMesh2D : MonoBehaviour {
-        [Serializable]
-        public struct GeometryNode {
-            public NodeFlags flags;
-
-            [Flags]
-            public enum NodeFlags : byte {
-                /// <summary>
-                /// Is this node obstructed?
-                /// </summary>
-                Solid = 1 << 0,
-
-                /// <summary>
-                /// Is the node below this one obstructed?
-                /// </summary>
-                Supported = 1 << 1,
-
-                /// <summary>
-                /// Is the node left to this one obstructed?
-                /// </summary>
-                LeftWall = 1 << 2,
-
-                /// <summary>
-                /// Is the node right to this one obstructed?
-                /// </summary>
-                RightWall = 1 << 3,
-
-                /// <summary>
-                /// Is the node left and bottom to this one not obstructed?
-                /// </summary>
-                LeftEdge = 1 << 4,
-
-                /// <summary>
-                /// Is the node right and bottom to this one not obstructed?
-                /// </summary>
-                RightEdge = 1 << 5,
-                UnusedA = 1 << 6,
-                UnusedB = 1 << 7
-            }
-
-            public bool IsSupported() {
-                return Is(NodeFlags.Supported);
-            }
-
-            public bool IsSolid() {
-                return Is(NodeFlags.Solid);
-            }
-
-            public bool IsLeftWall() {
-                return Is(NodeFlags.LeftWall);
-            }
-
-            public bool IsRightWall() {
-                return Is(NodeFlags.RightWall);
-            }
-
-            private bool Is(NodeFlags mask) {
-                return (flags & mask) == mask;
-            }
-
-            public bool IsLeftEdge() {
-                return Is(NodeFlags.LeftEdge);
-            }
-
-            public bool IsRightEdge() {
-                return Is(NodeFlags.RightEdge);
-            }
-
-            public bool IsEmpty() {
-                return flags == 0;
-            }
-        }
-
+namespace Shiroi.Pathfinding2D.Runtime {
+    public class NavMesh2D<G> : MonoBehaviour {
         [SerializeField, HideInInspector]
-        private GeometryNode[] nodes;
+        private G[] nodes;
 
         public LayerMask worldMask;
         public Grid grid;
@@ -84,7 +12,7 @@ namespace Shiroi.Unity.Pathfinding2D.Runtime {
         [SerializeField]
         private Vector2Int min, max;
 
-        public GeometryNode[] Nodes => nodes;
+        public G[] Nodes => nodes;
 
         public void SetMinMax(Vector2Int a, Vector2Int b) {
             min = new Vector2Int(
@@ -130,17 +58,16 @@ namespace Shiroi.Unity.Pathfinding2D.Runtime {
             var transformedY = y - min.y;
             return (uint) (transformedY * Width + transformedX);
         }
-#if UNITY_EDITOR
 
-        public void ImportNodes(GeometryNode[] newNodes) {
+        public void ImportNodes(G[] newNodes) {
             nodes = newNodes;
         }
-#endif
+
         public Vector3 WorldCenter(int x, int y) {
             return grid.GetCellCenterWorld(new Vector3Int(x, y, 0));
         }
 
-        public GeometryNode NodeUnsafe(int cellX, int cellY) {
+        public G NodeUnsafe(int cellX, int cellY) {
             return nodes[IndexOfUnsafe(cellX, cellY)];
         }
 

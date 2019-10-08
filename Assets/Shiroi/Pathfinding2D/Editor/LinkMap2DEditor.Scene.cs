@@ -1,16 +1,15 @@
-using Shiroi.Unity.Pathfinding2D.Runtime;
+using Shiroi.Pathfinding2D.Runtime;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace Shiroi.Unity.Pathfinding2D.Editor {
-    public partial class LinkMap2DEditor {
+namespace Shiroi.Pathfinding2D.Editor {
+    public partial class LinkMap2DEditor<L, G, N> {
         public int linkRadius;
         public bool drawDirect;
         public bool drawGravitational;
 
-        private void OnSceneGUI() {
-            var linkmap = (LinkMap2D) target;
+        /*private void OnSceneGUI() {
+            var linkmap = (LinkMap2D<L, G>) target;
             var navmesh = linkmap.navMesh;
             if (navmesh == null) {
                 return;
@@ -86,6 +85,6 @@ namespace Shiroi.Unity.Pathfinding2D.Editor {
                 (Vector2Int) mouseCell - radius,
                 (Vector2Int) mouseCell + radius, grid
             );
-        }
+        }*/
     }
 }

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Shiroi.Unity.Pathfinding2D.Editor {
+namespace Shiroi.Pathfinding2D.Editor {
     public static class UnityX {
         public static LayerMask LayerMaskField(string label, LayerMask current) {
             var layerNames = new List<string>();
@@ -13,5 +13,7 @@ namespace Shiroi.Unity.Pathfinding2D.Editor {
 
             return EditorGUILayout.MaskField(label, current, layerNames.ToArray());
         }
+
+        public const float kBoundariesWidth = 2F;
     }
 }

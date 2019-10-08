@@ -1,21 +1,20 @@
 using System.Collections.Generic;
-using Shiroi.Unity.Pathfinding2D.Editor.Validation;
-using Shiroi.Unity.Pathfinding2D.Runtime;
+using Shiroi.Pathfinding2D.Editor.Validation;
+using Shiroi.Pathfinding2D.Runtime;
 using UnityEditor;
 using UnityEngine;
 
-namespace Shiroi.Unity.Pathfinding2D.Editor {
-    [CustomEditor(typeof(LinkMap2D))]
-    public partial class LinkMap2DEditor : UnityEditor.Editor {
+namespace Shiroi.Pathfinding2D.Editor {
+    public partial class LinkMap2DEditor<L, G, N> : UnityEditor.Editor where N : NavMesh2D<G> {
         public uint JumpCount = 3;
 
         public float TimeStep = 0.01F;
 
         public override void OnInspectorGUI() {
-            var linkMap = (LinkMap2D) target;
+            var linkMap = (LinkMap2D<L, G>) target;
             using (new EditorGroupScope("Link Map")) {
                 linkMap.navMesh =
-                    (NavMesh2D) EditorGUILayout.ObjectField("Navmesh", linkMap.navMesh, typeof(NavMesh2D), true);
+                    (NavMesh2D<G>) EditorGUILayout.ObjectField("Navmesh", linkMap.navMesh, typeof(N), true);
             }
 
             using (new EditorGroupScope("Info")) {
@@ -26,25 +25,25 @@ namespace Shiroi.Unity.Pathfinding2D.Editor {
             }
 
             using (new EditorGroupScope("Editor")) {
-                GUI.enabled = Validators.HasNavMesh.Check(linkMap);
+                GUI.enabled = Validators<L, G>.HasNavMesh.Check(linkMap);
                 linkRadius = EditorGUILayout.IntField("Preview Radius", linkRadius);
                 drawDirect = EditorGUILayout.Toggle("Draw Direct", drawDirect);
                 drawGravitational = EditorGUILayout.Toggle("Draw Gravitational", drawGravitational);
                 if (GUILayout.Button("Generate Links")) {
-                    GenerateLinks(linkMap);
+                    //GenerateLinks(linkMap);
                 }
 
                 GUI.enabled = true;
 
                 Validators.ValidateInEditor(
                     linkMap,
-                    Validators.HasNavMesh,
-                    Validators.LinksMatchGeometry
+                    Validators<L, G>.HasNavMesh,
+                    Validators<L, G>.LinksMatchGeometry
                 );
             }
         }
 
-        public void GenerateLinks(LinkMap2D linkMap) {
+        /*public void GenerateLinks(LinkMap2D<L,G> linkMap) {
             var navmesh = linkMap.navMesh;
             var min = navmesh.Min;
             var max = navmesh.Max;
@@ -108,7 +107,7 @@ namespace Shiroi.Unity.Pathfinding2D.Editor {
                     currentPosition,
                     currentPosition + force,
                     navmesh.worldMask
-                );*/
+                );#1#
                 currentPosition += force * TimeStep;
                 force += Physics2D.gravity * TimeStep;
                 points.Add(cast.collider == null ? currentPosition : cast.point);
@@ -181,6 +180,6 @@ namespace Shiroi.Unity.Pathfinding2D.Editor {
             if (!neighbor.IsSolid()) {
                 links.Add(new LinkMap2D.LinkNode.DirectLink(navmesh.IndexOfUnsafe(x, y)));
             }
-        }
+        }*/
     }
 }

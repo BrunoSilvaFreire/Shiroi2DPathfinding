@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
+using Shiroi.Pathfinding2D.Runtime;
 using UnityEngine;
 
-namespace Shiroi.Unity.Pathfinding2D.Runtime {
-    public class LinkMap2D : MonoBehaviour {
+namespace Shiroi.Pathfinding2D.Kuroi {
+    public class KuroiLinkMap : LinkMap2D<KuroiLinkMap.LinkNode, KuroiNavMesh.GeometryNode> {
         [Serializable]
         public struct LinkNode {
             public static readonly LinkNode Empty = new LinkNode {
@@ -50,9 +50,5 @@ namespace Shiroi.Unity.Pathfinding2D.Runtime {
             public DirectLink[] directLinks;
             public GravitationalLink[] gravitationalLinks;
         }
-
-
-        public NavMesh2D navMesh;
-        public LinkNode[] links;
     }
 }

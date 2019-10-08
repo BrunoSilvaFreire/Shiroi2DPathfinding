@@ -1,15 +1,12 @@
-﻿using System;
-using JetBrains.Annotations;
-using Shiroi.Unity.Pathfinding2D.Editor.Validation;
-using Shiroi.Unity.Pathfinding2D.Runtime;
+﻿using Shiroi.Pathfinding2D.Editor.Validation;
+using Shiroi.Pathfinding2D.Runtime;
 using UnityEditor;
 using UnityEngine;
 
-namespace Shiroi.Unity.Pathfinding2D.Editor {
-    [CustomEditor(typeof(NavMesh2D))]
-    public partial class NavMesh2DEditor : UnityEditor.Editor {
+namespace Shiroi.Pathfinding2D.Editor {
+    public partial class NavMesh2DEditor<G> : UnityEditor.Editor {
         private void OnEnable() {
-            var navmesh = target as NavMesh2D;
+            var navmesh = target as NavMesh2D<G>;
             if (navmesh == null) {
                 return;
             }
@@ -18,7 +15,7 @@ namespace Shiroi.Unity.Pathfinding2D.Editor {
         }
 
         public override void OnInspectorGUI() {
-            var navmesh = target as NavMesh2D;
+            var navmesh = target as NavMesh2D<G>;
             if (navmesh == null) {
                 return;
             }
@@ -30,7 +27,7 @@ namespace Shiroi.Unity.Pathfinding2D.Editor {
                 navmesh.SetMinMax(nMin, nMax);
                 navmesh.worldMask = UnityX.LayerMaskField("World Mask", navmesh.worldMask);
                 if (GUILayout.Button("Generate Mesh")) {
-                    GenerateNodes(navmesh);
+                    //GenerateNodes(navmesh);
                 }
             }
 
@@ -45,11 +42,11 @@ namespace Shiroi.Unity.Pathfinding2D.Editor {
                 boxCastSize = EditorGUILayout.Vector2Field("BoxCastSize", boxCastSize);
                 drawEmpty = EditorGUILayout.Toggle("Draw Empty", drawEmpty);
                 drawSolids = EditorGUILayout.Toggle("Draw Solids", drawSolids);
-                drawMouse  = EditorGUILayout.Toggle("Draw Over Mouse", drawMouse);
+                drawMouse = EditorGUILayout.Toggle("Draw Over Mouse", drawMouse);
                 Validators.ValidateInEditor(
                     navmesh,
-                    Validators.HasNodes,
-                    Validators.NodesMatchGeometry
+                    Validators<G>.HasNodes,
+                    Validators<G>.NodesMatchGeometry
                 );
             }
         }

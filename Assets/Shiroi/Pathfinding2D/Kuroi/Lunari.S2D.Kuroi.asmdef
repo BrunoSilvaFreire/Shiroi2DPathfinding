@@ -1,0 +1,14 @@
+{
+    "name": "S2D-Kuroi",
+    "references": [
+        "GUID:0c4fd3511e1a2caf6856ea9cba4750bd"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}

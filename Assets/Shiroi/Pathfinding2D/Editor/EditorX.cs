@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Shiroi.Unity.Pathfinding2D.Editor {
+namespace Shiroi.Pathfinding2D.Editor {
     public static class EditorX {
         public static void ForGizmo(Vector3 pos, Vector3 direction, float arrowHeadLength = 0.25f,
             float arrowHeadAngle = 20.0f, float arrowPosition = 0.5f) {
@@ -103,7 +103,7 @@ namespace Shiroi.Unity.Pathfinding2D.Editor {
                     2, 3,
                     3, 0
                 },
-                NavMesh2DEditor.kBoundariesWidth
+                UnityX.kBoundariesWidth
             );
         }
     }

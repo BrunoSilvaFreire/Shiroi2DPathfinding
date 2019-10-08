@@ -1,12 +1,12 @@
-using Shiroi.Unity.Pathfinding2D.Runtime;
+using Shiroi.Pathfinding2D.Runtime;
 using UnityEngine;
 
-namespace Shiroi.Unity.Pathfinding2D.Editor {
-    public partial class NavMesh2DEditor {
+namespace Shiroi.Pathfinding2D.Editor {
+    public partial class NavMesh2DEditor<G> {
         public const float kDefaultBoxcastSize = 0.9F;
         public Vector2 boxCastSize;
 
-        public void GenerateNodes(NavMesh2D navmesh) {
+        /*public void GenerateNodes(NavMesh2D navmesh) {
             var min = navmesh.Min;
             var max = navmesh.Max;
             var nodes = new NavMesh2D.GeometryNode[navmesh.Area];
@@ -56,6 +56,6 @@ namespace Shiroi.Unity.Pathfinding2D.Editor {
             var position = navmesh.grid.GetCellCenterWorld(new Vector3Int(x, y, 0));
             var found = Physics2D.OverlapBox(position, boxCastSize, 0, navmesh.worldMask);
             return found;
-        }
+        }*/
     }
 }
