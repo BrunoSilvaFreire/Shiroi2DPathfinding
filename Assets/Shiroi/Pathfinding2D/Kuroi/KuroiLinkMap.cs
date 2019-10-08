@@ -12,18 +12,6 @@ namespace Shiroi.Pathfinding2D.Kuroi {
             };
 
             [Serializable]
-            public struct DirectLink : ILink {
-                [SerializeField]
-                private uint destination;
-
-                public DirectLink(uint destination) {
-                    this.destination = destination;
-                }
-
-                public uint Destination => destination;
-            }
-
-            [Serializable]
             public class GravitationalLink : ILink {
                 [SerializeField]
                 private Vector2 force;
